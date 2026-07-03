@@ -1,0 +1,33 @@
+// Presentation-only: map a symbol to a display glyph. Emoji are CC0-safe and not LBAL assets.
+// This is UI flavor, not game stats, so it does not violate the data-driven rule.
+import type { Symbol as GameSymbol } from '../engine/types';
+
+const BY_ID: Record<string, string> = {
+  'copper-coin': '🪙',
+  'field-mouse': '🐭',
+  'wheat-sheaf': '🌾',
+  prospector: '⛏️',
+  'raw-ore': '🪨',
+};
+
+const BY_TAG: Record<string, string> = {
+  treasure: '💰',
+  animal: '🐾',
+  food: '🍎',
+  plant: '🌱',
+  mineral: '💎',
+  human: '🧑',
+  tool: '🔧',
+  destroyer: '💥',
+  scaler: '✖️',
+  spawner: '🌀',
+  gambler: '🎲',
+  cursed: '☠️',
+};
+
+export function glyphFor(symbol: GameSymbol | undefined): string {
+  if (!symbol) return '·';
+  if (BY_ID[symbol.id]) return BY_ID[symbol.id];
+  for (const t of symbol.tags) if (BY_TAG[t]) return BY_TAG[t];
+  return '●';
+}

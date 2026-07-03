@@ -100,11 +100,150 @@ body {
   min-width: 0;
   min-height: 0;
   aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-.footer {
-  text-align: center;
+.cell--filled {
+  background: #2d3350;
+}
+
+.cell__glyph {
+  font-size: clamp(1rem, 5.5vw, 1.7rem);
+  line-height: 1;
+}
+
+.cell__pay {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.actions__prompt {
+  margin: 0;
+  font-size: 0.9rem;
   color: var(--muted);
-  font-size: 0.75rem;
+  text-align: center;
+}
+
+.btn {
+  appearance: none;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #1a1300;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 14px 28px;
+  min-height: 48px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--spin {
+  font-size: 1.25rem;
+  padding: 16px 40px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.btn--skip {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--cell-edge);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+  width: 100%;
+}
+
+.card {
+  appearance: none;
+  background: var(--panel);
+  border: 1px solid var(--cell-edge);
+  border-radius: 12px;
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  min-height: 120px;
+  text-align: center;
+  color: var(--text);
+  touch-action: manipulation;
+}
+
+.card:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.card__glyph {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.card__name {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.card__rarity {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.card__rarity--rare { color: #6ab7ff; }
+.card__rarity--very-rare { color: #c88bff; }
+.card__rarity--special { color: #ff9f6b; }
+
+.card__hint {
+  font-size: 0.62rem;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+.endscreen {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0;
+}
+.endscreen--won { color: #7ee0a0; }
+.endscreen--lost { color: #ff7b7b; }
+
+/* Log */
+.log {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-align: center;
   padding-block: 4px;
+  min-height: 3.5em;
+}
+
+.log__line {
+  line-height: 1.5;
 }

@@ -18,18 +18,15 @@ Phased delivery. **Each phase ends playable on the dev URL.** Stop after each ph
 - Minimal app: load `data/*.json`, render an empty board (4×4) responsively on a phone.
 - **Done when:** both Pages URLs respond and the board renders on a real phone.
 
-## Phase 2 — Core loop (solo harness)
-Builds + TDDs the pure engine and a single-device playable loop; the two-player round
-sync (individual + communal consensus draft over P2P) is Phase 4.
-- Seeded RNG (mulberry32) with golden vectors; integer coin math.
-- Payout engine (TDD): canonical order base → destroy → transform → spawn → add → multiply → sum
-  (GAME_DESIGN §9), single-pass snapshot semantics + degenerate-case tests (§13 R-Q2).
-- Synergy resolver; draft (1-of-3) **to own** and **to shared**, with **skip**; rent deadlines;
-  board growth (16→36).
-- Guardrail `resolveDraftConstraints(own, shared) → {canDraftOwn}` — ✅ **confirmed** hard cap
-  `own ≤ shared+5`, skip-only at cap (§8); property-tested after every transition (§13 R-Q6).
-- Playable solo run start → win/lose on the dev URL.
-- **Done when:** a run is completable on the dev URL and the engine test suite is green.
+## Phase 2 — Core loop (solo harness) ✅ DONE
+Built + TDD'd the pure engine and a single-device playable loop; two-player round sync is Phase 4.
+- [x] Seeded RNG (mulberry32) with golden vectors; integer coin math.
+- [x] Payout engine (TDD): canonical order base → destroy → transform → spawn → add → multiply →
+  sum, single-pass snapshot semantics + degenerate-case tests (§13 R-Q2).
+- [x] Draft (1-of-3) to own and to shared with skip; rent deadlines; board growth (16→36).
+- [x] Guardrail `resolveDraftConstraints` hard cap `own ≤ shared+5`, property-tested (§13 R-Q6).
+- [x] Playable solo run start → win/lose, deployed + verified live on the dev URL (headless
+  playthrough: reached D4/5×5, synergies correct, 0 console errors). 31 unit tests green.
 
 ## Phase 3 — Dev tools
 - Symbol browser (filter by tag/rarity), synergy graph (buffs/destroys/spawns), live value

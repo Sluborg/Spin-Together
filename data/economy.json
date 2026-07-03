@@ -29,5 +29,9 @@
   "draft": {
     "cardsOffered": 3,
     "rarityWeights": { "common": 60, "uncommon": 25, "rare": 11, "very-rare": 3, "special": 1 }
+  },
+  "starter": {
+    "own": ["copper-coin", "copper-coin", "field-mouse", "wheat-sheaf"],
+    "shared": ["copper-coin", "copper-coin"]
   }
 }

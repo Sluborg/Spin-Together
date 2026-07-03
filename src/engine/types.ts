@@ -117,4 +117,5 @@ export interface Economy {
     note?: string;
   };
   draft: { cardsOffered: number; rarityWeights: Record<Rarity, number> };
+  starter: { own: string[]; shared: string[] };
 }

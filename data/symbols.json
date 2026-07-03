@@ -23,14 +23,14 @@
       "baseValue": 1,
       "tags": ["animal"],
       "synergies": [
-        { "withTag": "food", "effect": "add", "value": 2, "note": "Eats nearby food for +2." }
+        { "withTag": "food", "effect": "addPerAdjacent", "value": 2, "note": "+2 for each adjacent food symbol." }
       ],
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
       "artRef": "assets/symbols/field-mouse.png",
       "soundRef": "assets/sfx/squeak.ogg",
-      "devNotes": "Cheap animal that rewards a food-heavy shared pool."
+      "devNotes": "Cheap animal that rewards a food-heavy pool placed next to it (self-buff model)."
     },
     {
       "id": "wheat-sheaf",
@@ -39,7 +39,7 @@
       "baseValue": 1,
       "tags": ["food", "plant"],
       "synergies": [
-        { "withTag": "animal", "effect": "add", "value": 1, "note": "Feeds animals; symmetric with Field Mouse." }
+        { "withTag": "animal", "effect": "add", "value": 1, "note": "+1 for each animal on the board." }
       ],
       "destroys": [],
       "transforms": [],
@@ -57,14 +57,14 @@
       "baseValue": 2,
       "tags": ["human", "scaler"],
       "synergies": [
-        { "withTag": "mineral", "effect": "multiply", "value": 2, "note": "Doubles adjacent mineral payouts." }
+        { "withTag": "mineral", "effect": "multiply", "value": 2, "note": "Pays ×2 while any mineral is on the board." }
       ],
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
       "artRef": "assets/symbols/prospector.png",
       "soundRef": "assets/sfx/pickaxe.ogg",
-      "devNotes": "Scaler that anchors a mineral build. Multiply resolves after adds."
+      "devNotes": "Scaler that pays double when it shares the board with a mineral. Multiply resolves after adds (self-buff model)."
     },
     {
       "id": "raw-ore",

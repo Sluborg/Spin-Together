@@ -1,10 +1,15 @@
 # Project status — Spin-Together
 
-_Last updated: 2026-07-03 (Phase 1)_
+_Last updated: 2026-07-03 (Phase 2)_
 
 ## Current state
-**Phase 1 (Scaffold) — DONE and deployed live. ✅**
-Both Pages URLs verified serving the app (HTTP 200 + JS bundle 200). CI green on all branches.
+**Phase 2 (Core loop, solo) — DONE and deployed live. ✅**
+Playable single-device run on the dev URL: spin → individual own draft → communal shared draft
+(both skippable, own hard-capped at shared+5) → rent deadlines → board growth (4×4→6×6) →
+win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless playthrough
+(reached D4 / 5×5, synergies compute correctly, zero console errors).
+
+Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs live.
 - Toolchain: Vite + TypeScript (strict) + ESLint (flat) + Vitest. `package.json` scripts:
   `dev`, `build`, `preview`, `typecheck`, `lint`, `validate-data`, `test`.
 - Board renders on a phone: responsive 4×4 CSS-Grid board + placeholder HUD (coffer / rent /
@@ -35,10 +40,17 @@ Both Pages URLs verified serving the app (HTTP 200 + JS bundle 200). CI green on
 - Confirm run length (8) and payout resolution order (canonical order already spec'd).
 - Phase 4 networking requirements captured: TURN relay, wss, snapshot+localStorage resume.
 
+## Engine (Phase 2, pure & tested — `src/engine/`)
+- `rng.ts` mulberry32 (golden vectors) · `payout.ts` canonical resolver (integer math, snapshot
+  semantics, destroy/transform/spawn/add/multiply + degenerate cases) · `draft.ts` guardrail +
+  weighted offers · `economy.ts` rent/growth/rounds · `game.ts` reducers · `state.ts` types.
+- 31 tests: RNG determinism, payout order + edge cases, guardrail property (`own ≤ shared+5`
+  after every transition), win/lose. UI (`src/ui/app.ts`) is a thin DOM view over the reducers.
+
 ## Next action
-**Await owner approval for Phase 2 (Solo core loop)** — seeded RNG (mulberry32) + golden
-vectors, TDD payout engine (canonical order, integer coin math), synergy resolver, draft, rent
-deadlines, board growth. Resolve R-D1 before drafting is coded.
+**Await owner approval for Phase 3 (Dev tools):** symbol browser + tag filter, synergy graph,
+in-browser live value editing + JSON export, `balance-report` wired to real data. (Two-player
+P2P is Phase 4; balance tuning is Phase 5.)
 
 ## Live URLs
 - Stable: `https://sluborg.github.io/Spin-Together/` — ✅ live
