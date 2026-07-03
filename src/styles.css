@@ -140,12 +140,22 @@ body {
 
 .slot__pay {
   position: absolute;
-  right: 1px;
-  bottom: -1px;
-  font-size: 0.56rem;
+  right: -3px;
+  bottom: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: radial-gradient(circle at 34% 30%, #ffe595, #f2bb46 62%, #d89a2b);
+  border: 1.5px solid #7a4d13;
+  color: #4a2e08;
+  font-size: 0.52rem;
   font-weight: 800;
-  color: #6f4310;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 /* Reel spin animation */
