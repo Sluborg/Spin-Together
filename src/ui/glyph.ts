@@ -3,11 +3,11 @@
 import type { Symbol as GameSymbol } from '../engine/types';
 
 const BY_ID: Record<string, string> = {
-  'copper-coin': '💎',
+  'copper-coin': '🪙',
   'field-mouse': '🐔',
-  'wheat-sheaf': '🌾',
+  'wheat-sheaf': '🥕',
   prospector: '🧑‍🌾',
-  'raw-ore': '🪨',
+  'raw-ore': '💎',
 };
 
 const BY_TAG: Record<string, string> = {

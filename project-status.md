@@ -9,13 +9,17 @@ Playable single-device run on the dev URL: spin → individual own draft → com
 win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless playthrough
 (reached D4 / 5×5, synergies compute correctly, zero console errors).
 
-**UI polish (post-Phase 2):** draft selections are a **centered overlay** with a hide/show
-toggle (board stays peekable). Symbols render as **Kenney "Tiny" pixel-art sprites** (Tiny Farm +
-Tiny Dungeon, 16px, one cohesive family), nearest-neighbor upscaled + normalized to 128×128,
-crisp via `image-rendering: pixelated`; emoji fallback. Sourcing + rejected packs in
-`docs/assets/pack-map.md`; provenance in `CREDITS.md`. Wheat Sheaf + Raw Ore are literal; the
-Tiny family has no mouse/coin so two seeds were renamed to their art (mouse→"Barn Hen",
-coin→"Gemstone") — **ids + mechanics unchanged**, reversible. _Owner is trying it to judge feel._
+**UI polish (post-Phase 2):**
+- **Board = slot machine.** A dark cabinet holds 6 vertical cream reel strips (LBAL-style) with
+  slot dots. Footprint is the full **6×6**; the current board region is centered + "active",
+  outer ring dimmed to preview the growth. Smaller cells than the old grid.
+- **Sprites: frame-free 16px pixel** (Tiny-style). Kenney Tiny Farm for farmer/hen/carrot;
+  coin + gem are **original CC0 pixel art** (Kenney's Tiny *item* tiles carry an inventory-slot
+  frame — the "thick brown border" — so they're avoided). Crisp via `image-rendering: pixelated`.
+- **Draft** is a centered overlay with a hide/show toggle.
+- Names: Copper Coin, Gemstone, Prospector, Barn Hen, Carrot — **ids + mechanics unchanged**,
+  reversible. Sourcing in `docs/assets/pack-map.md`; provenance in `CREDITS.md`.
+  _Owner is iterating on feel._
 
 Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs live.
 - Toolchain: Vite + TypeScript (strict) + ESLint (flat) + Vitest. `package.json` scripts:

@@ -4,26 +4,35 @@
   "symbols": [
     {
       "id": "copper-coin",
-      "name": "Gemstone",
+      "name": "Copper Coin",
       "rarity": "common",
       "baseValue": 1,
-      "tags": ["treasure"],
+      "tags": [
+        "treasure"
+      ],
       "synergies": [],
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
       "artRef": "assets/symbols/copper-coin.png",
       "soundRef": "assets/sfx/coin.ogg",
-      "devNotes": "Baseline treasure filler (anchors EV). Name matched to available CC0 art (Kenney Tiny Dungeon gem); id kept stable."
+      "devNotes": "Baseline treasure filler (anchors EV). Art: original CC0 pixel coin (Tiny style)."
     },
     {
       "id": "field-mouse",
       "name": "Barn Hen",
       "rarity": "common",
       "baseValue": 1,
-      "tags": ["animal"],
+      "tags": [
+        "animal"
+      ],
       "synergies": [
-        { "withTag": "food", "effect": "addPerAdjacent", "value": 2, "note": "+2 for each adjacent food symbol." }
+        {
+          "withTag": "food",
+          "effect": "addPerAdjacent",
+          "value": 2,
+          "note": "+2 for each adjacent food symbol."
+        }
       ],
       "destroys": [],
       "transforms": [],
@@ -34,30 +43,49 @@
     },
     {
       "id": "wheat-sheaf",
-      "name": "Wheat Sheaf",
+      "name": "Carrot",
       "rarity": "common",
       "baseValue": 1,
-      "tags": ["food"],
+      "tags": [
+        "food"
+      ],
       "synergies": [
-        { "withTag": "animal", "effect": "add", "value": 1, "note": "+1 for each animal on the board." }
+        {
+          "withTag": "animal",
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each animal on the board."
+        }
       ],
       "destroys": [],
       "transforms": [],
       "spawnRules": [
-        { "spawns": "wheat-sheaf", "chance": 0.05, "note": "Occasionally propagates another sheaf into the shared pool." }
+        {
+          "spawns": "wheat-sheaf",
+          "chance": 0.05,
+          "note": "Occasionally propagates another sheaf into the shared pool."
+        }
       ],
       "artRef": "assets/symbols/wheat-sheaf.png",
       "soundRef": "assets/sfx/rustle.ogg",
-      "devNotes": "Food backbone; light spawner. CC0 art: Kenney Tiny Farm wheat sack. Mechanics unchanged."
+      "devNotes": "Food backbone; light spawner. Art: Kenney Tiny Farm carrot (CC0). Mechanics unchanged."
     },
     {
       "id": "prospector",
       "name": "Prospector",
       "rarity": "uncommon",
       "baseValue": 2,
-      "tags": ["human", "scaler"],
+      "tags": [
+        "human",
+        "scaler"
+      ],
       "synergies": [
-        { "withTag": "mineral", "effect": "multiply", "value": 2, "note": "Pays ×2 while any mineral is on the board." }
+        {
+          "withTag": "mineral",
+          "effect": "multiply",
+          "value": 2,
+          "note": "Pays ×2 while any mineral is on the board."
+        }
       ],
       "destroys": [],
       "transforms": [],
@@ -68,17 +96,19 @@
     },
     {
       "id": "raw-ore",
-      "name": "Raw Ore",
+      "name": "Gemstone",
       "rarity": "uncommon",
       "baseValue": 2,
-      "tags": ["mineral"],
+      "tags": [
+        "mineral"
+      ],
       "synergies": [],
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
       "artRef": "assets/symbols/raw-ore.png",
       "soundRef": "assets/sfx/clink.ogg",
-      "devNotes": "Mineral payload for Prospector. A future 'smelter' symbol will add a transform raw-ore -> silver-ingot once that id exists; the validator would reject the dangling target until then (see test/fixtures/invalid-symbols.json)."
+      "devNotes": "Mineral payload for Prospector (×2 scaler target). Art: original CC0 pixel gem (Tiny style)."
     }
   ]
 }

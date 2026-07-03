@@ -63,23 +63,42 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     return wrap;
   }
 
+  const maxCols = Math.max(...config.economy.boardGrowth.map((g) => g.cols));
+  const maxRows = Math.max(...config.economy.boardGrowth.map((g) => g.rows));
+
+  // Render the full maxCols×maxRows cabinet as vertical reels; the current board region is
+  // centered and "active", the surrounding slots preview the growth (dimmed).
   function boardArea(): HTMLElement {
     const area = el('main', 'board-area');
-    const board = el('div', 'board');
-    board.style.setProperty('--cols', String(state.cols));
-    board.style.setProperty('--rows', String(state.rows));
-    const n = state.cols * state.rows;
-    const cells = state.lastSpin && state.lastSpin.cells.length === n ? state.lastSpin.cells : null;
-    for (let i = 0; i < n; i++) {
-      const cell = el('div', 'cell');
-      if (cells && cells[i].symbolId) {
-        cell.classList.add('cell--filled');
-        cell.append(glyphNode(sym(cells[i].symbolId), 'in-cell'));
-        if (cells[i].payout > 0) cell.append(el('span', 'cell__pay', `+${cells[i].payout}`));
+    const machine = el('div', 'machine');
+    const reels = el('div', 'reels');
+    reels.style.setProperty('--reelcount', String(maxCols));
+
+    const aCols = state.cols;
+    const aRows = state.rows;
+    const colStart = Math.floor((maxCols - aCols) / 2);
+    const rowStart = Math.floor((maxRows - aRows) / 2);
+    const cells = state.lastSpin && state.lastSpin.cells.length === aCols * aRows ? state.lastSpin.cells : null;
+
+    for (let c = 0; c < maxCols; c++) {
+      const reel = el('div', 'reel');
+      reel.style.setProperty('--slots', String(maxRows));
+      for (let r = 0; r < maxRows; r++) {
+        const active = c >= colStart && c < colStart + aCols && r >= rowStart && r < rowStart + aRows;
+        const slot = el('div', active ? 'slot' : 'slot slot--inactive');
+        const placed = active && cells ? cells[(r - rowStart) * aCols + (c - colStart)] : null;
+        if (placed && placed.symbolId) {
+          slot.append(glyphNode(sym(placed.symbolId), 'in-cell'));
+          if (placed.payout > 0) slot.append(el('span', 'slot__pay', `+${placed.payout}`));
+        } else {
+          slot.append(el('span', 'slot__dot'));
+        }
+        reel.append(slot);
       }
-      board.append(cell);
+      reels.append(reel);
     }
-    area.append(board);
+    machine.append(reels);
+    area.append(machine);
     return area;
   }
 

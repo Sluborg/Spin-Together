@@ -4,30 +4,37 @@ How each symbol's art is sourced. All packs are **CC0** (Kenney.nl). Art style: 
 (Kenney "Tiny" family, 16×16)**, upscaled with nearest-neighbor and normalized to a uniform
 128×128 canvas (~18% padding). Provenance rows are in `CREDITS.md`.
 
-## Source packs (all CC0, Kenney.nl)
-| Pack | Style | Used for |
+## Source (all CC0)
+| Source | Style | Used for |
 |------|-------|----------|
-| [Tiny Farm](https://kenney.nl/assets/tiny-farm) | 16px pixel | wheat, farmer, rock, hen |
-| [Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | 16px pixel | gem |
+| [Tiny Farm](https://kenney.nl/assets/tiny-farm) | 16px pixel | farmer, hen, carrot (frame-free tiles) |
+| Original pixel art (this repo) | 16px pixel, Tiny-style | coin, gem |
 
-Both are the same "Tiny" pixel family (shared 16px grid, palette, outline), so they cohere on
-one board.
+**Frame note:** Kenney's Tiny *item* tiles (coin/gem/potion/sack) are drawn inside an
+inventory-slot frame (a thick dark border), which looked bad on the board. Only Tiny
+*characters/animals/crops* are frame-free. So the frame-free Kenney tiles are used directly, and
+the coin + gem were authored as original 16px pixel art in the same style.
 
-## Per-symbol mapping (id → tag → name → pack → tile)
-| Symbol id | Tag(s) | Display name | Pack | Tile | Match |
-|-----------|--------|--------------|------|------|-------|
-| wheat-sheaf | food | **Wheat Sheaf** | Tiny Farm | `tile_0070` (wheat sack) | literal ✓ |
-| raw-ore | mineral | **Raw Ore** | Tiny Farm | `tile_0089` (rock pile) | literal ✓ |
-| prospector | human, scaler | Prospector | Tiny Farm | `tile_0109` (farmer) | person stand-in (rustic prospector) |
-| field-mouse | animal | **Barn Hen** | Tiny Farm | `tile_0122` (chicken) | renamed — Tiny family has no mouse; a hen "pecks food", matching the +food mechanic |
-| copper-coin | treasure | **Gemstone** | Tiny Dungeon | `tile_0102` (gem) | renamed — no coin in these packs; gem = treasure filler |
+## Per-symbol mapping (id → tag → name → source → tile)
+| Symbol id | Tag(s) | Display name | Source | Tile | Match |
+|-----------|--------|--------------|--------|------|-------|
+| prospector | human, scaler | Prospector | Tiny Farm | `tile_0109` (farmer) | person; a rustic prospector |
+| field-mouse | animal | **Barn Hen** | Tiny Farm | `tile_0122` (chicken) | renamed — a hen "pecks food", matching the +food mechanic |
+| wheat-sheaf | food | **Carrot** | Tiny Farm | `tile_0068` (carrot) | renamed — clean, frame-free crop |
+| copper-coin | treasure | **Copper Coin** | original | authored 16px coin | literal ✓ |
+| raw-ore | mineral | **Gemstone** | original | authored 16px gem | mineral crystal |
 
 All **ids, tags, and mechanics are unchanged** — only display `name`/`artRef`/flavor moved. Fully reversible.
 
+## Board presentation
+Rendered as a **slot machine**: a dark cabinet holding vertical cream reel strips (LBAL-style),
+with slot dots for empty positions. The footprint is the full 6×6; the current board region is
+centered and "active" (lit) while the surrounding ring is dimmed to preview the growth to 6×6.
+
 ## Rejected / superseded
-- **Generic Items** (flat color) — owner disliked the tilted/angled look. Superseded by Tiny pixel.
-- **Animal Pack Redux** (flat) — used briefly for a rabbit; superseded (no mouse anyway).
-- **Platformer Art Deluxe / Food Kit (3D) / Puzzle Pack 2 (tiles)** — style clashes; rejected earlier.
+- **Generic Items** (flat color) — owner disliked the tilted look, and the item tiles are framed.
+- **Tiny Farm sack/rock tiles + Tiny Dungeon coin/gem tiles** — carry the inventory-slot frame; not used.
+- **Animal Pack Redux / Platformer Art Deluxe / Food Kit (3D) / Puzzle Pack 2** — style clashes; rejected earlier.
 
 ## Owner-surveyed packs (candidates for future symbols)
 From the owner's own CC0 survey — assign these as the roster grows (keep to the pixel family for
