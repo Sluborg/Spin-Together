@@ -1,0 +1,33 @@
+{
+  "$schema": "./economy.schema.json",
+  "version": 1,
+  "notes": "All economy tuning lives here. Never hardcode these in engine code. Final magic numbers are outputs of the balance-report skill, not authored by hand.",
+  "run": {
+    "deadlines": 8,
+    "spinsPerDeadline": [6, 6, 7, 7, 8, 9, 10, 10]
+  },
+  "rent": {
+    "model": "base * growth^d",
+    "base": 25,
+    "growth": 1.53,
+    "growthPerDeadline": null,
+    "note": "d is 1-indexed. growth=1.53 lands rent_8 ~= 750 (25*1.53^8), matching the intended LBAL-like 25->~750 climb; 1.7 was a spec error that overshot to ~1744. Phase 5: replace scalar `growth` with the `growthPerDeadline` vector so rent can bend sub-geometric after d6 (see GAME_DESIGN #R-E3). Calibrate the p25 (not mean) of Monte-Carlo spins vs rent_d."
+  },
+  "boardGrowth": [
+    { "afterDeadline": 0, "cols": 4, "rows": 4 },
+    { "afterDeadline": 2, "cols": 5, "rows": 4 },
+    { "afterDeadline": 3, "cols": 5, "rows": 5 },
+    { "afterDeadline": 4, "cols": 6, "rows": 5 },
+    { "afterDeadline": 5, "cols": 6, "rows": 6 }
+  ],
+  "guardrail": {
+    "maxGap": 5,
+    "softRampStart": 3,
+    "dilutionPerGap": 0.15,
+    "note": "gap = ownCount - sharedCount. <=2 normal; 3-4 soft ramp (one draft slot -> donate-to-shared, own odds *= (1 - dilutionPerGap*(gap-2))); ==5 hard lock personal draft to shared."
+  },
+  "draft": {
+    "cardsOffered": 3,
+    "rarityWeights": { "common": 60, "uncommon": 25, "rare": 11, "very-rare": 3, "special": 1 }
+  }
+}

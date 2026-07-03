@@ -1,0 +1,39 @@
+{
+  "$schemaVersion": 1,
+  "note": "Seed items to validate the co-op scope schema. scope: own | shared | both. Full item design finalized in Phase 5.",
+  "items": [
+    {
+      "id": "shared-granary",
+      "name": "Shared Granary",
+      "rarity": "uncommon",
+      "scope": "shared",
+      "effects": [
+        { "target": "tag", "match": "food", "effect": "add", "value": 1, "note": "+1 to every food symbol in the shared pool." }
+      ],
+      "artRef": "assets/items/granary.png",
+      "devNotes": "Rewards a food-based shared strategy; helps both players."
+    },
+    {
+      "id": "lucky-charm",
+      "name": "Lucky Charm",
+      "rarity": "rare",
+      "scope": "own",
+      "effects": [
+        { "target": "tag", "match": "animal", "effect": "multiply", "value": 1.5, "note": "Holder's own-pool animals pay x1.5." }
+      ],
+      "artRef": "assets/items/lucky-charm.png",
+      "devNotes": "Personal power spike; does not affect co-player."
+    },
+    {
+      "id": "landlords-ledger",
+      "name": "Landlord's Ledger",
+      "rarity": "very-rare",
+      "scope": "both",
+      "effects": [
+        { "target": "global", "match": null, "effect": "rentReduce", "value": 0.1, "note": "Reduces each deadline's rent by 10% for both players." }
+      ],
+      "artRef": "assets/items/ledger.png",
+      "devNotes": "Global economy relief; strong, hence very-rare."
+    }
+  ]
+}

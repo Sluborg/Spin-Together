@@ -1,0 +1,86 @@
+{
+  "$schemaVersion": 1,
+  "note": "Seed symbols to validate the schema. Full content pipeline fills this in later phases. Effects vocabulary: add, multiply, addPerAdjacent, destroy, transform, spawn. Every synergy references a tag or an id.",
+  "symbols": [
+    {
+      "id": "copper-coin",
+      "name": "Copper Coin",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": ["treasure"],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/copper-coin.png",
+      "soundRef": "assets/sfx/coin.ogg",
+      "devNotes": "Baseline filler. The 1-coin reference symbol used to anchor EV."
+    },
+    {
+      "id": "field-mouse",
+      "name": "Field Mouse",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": ["animal"],
+      "synergies": [
+        { "withTag": "food", "effect": "add", "value": 2, "note": "Eats nearby food for +2." }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/field-mouse.png",
+      "soundRef": "assets/sfx/squeak.ogg",
+      "devNotes": "Cheap animal that rewards a food-heavy shared pool."
+    },
+    {
+      "id": "wheat-sheaf",
+      "name": "Wheat Sheaf",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": ["food", "plant"],
+      "synergies": [
+        { "withTag": "animal", "effect": "add", "value": 1, "note": "Feeds animals; symmetric with Field Mouse." }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [
+        { "spawns": "wheat-sheaf", "chance": 0.05, "note": "Occasionally propagates into the shared pool." }
+      ],
+      "artRef": "assets/symbols/wheat-sheaf.png",
+      "soundRef": "assets/sfx/rustle.ogg",
+      "devNotes": "Food backbone symbol; light spawner to grow the shared pool."
+    },
+    {
+      "id": "prospector",
+      "name": "Prospector",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": ["human", "scaler"],
+      "synergies": [
+        { "withTag": "mineral", "effect": "multiply", "value": 2, "note": "Doubles adjacent mineral payouts." }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/prospector.png",
+      "soundRef": "assets/sfx/pickaxe.ogg",
+      "devNotes": "Scaler that anchors a mineral build. Multiply resolves after adds."
+    },
+    {
+      "id": "raw-ore",
+      "name": "Raw Ore",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": ["mineral"],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [
+        { "from": "raw-ore", "to": "silver-ingot", "note": "Placeholder: refined by a future smelter symbol." }
+      ],
+      "spawnRules": [],
+      "artRef": "assets/symbols/raw-ore.png",
+      "soundRef": "assets/sfx/clink.ogg",
+      "devNotes": "Mineral payload for Prospector; transform target references a not-yet-authored id (validator should flag dangling ids until added)."
+    }
+  ]
+}
