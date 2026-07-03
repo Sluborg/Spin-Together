@@ -9,11 +9,13 @@ Playable single-device run on the dev URL: spin → individual own draft → com
 win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless playthrough
 (reached D4 / 5×5, synergies compute correctly, zero console errors).
 
-**UI polish (post-Phase 2):** draft selections are now a **centered overlay** with a hide/show
-toggle (board stays peekable); symbols render as an **original CC0 vector icon set**
-(`public/assets/symbols/*.svg`) with an emoji fallback. _Note: the `asset-fetcher` subagent
-looped without producing files, so the icon set was authored directly; can be swapped for a
-Kenney.nl CC0 pack later if a different look is wanted._
+**UI polish (post-Phase 2):** draft selections are a **centered overlay** with a hide/show
+toggle (board stays peekable). Symbols render as **Kenney CC0 flat-color sprites** from two
+cohesive packs (Generic Items + Animal Pack Redux), normalized to a uniform 128×128 canvas, with
+an emoji fallback. Sourcing rationale + rejected packs in `docs/assets/pack-map.md`; provenance
+in `CREDITS.md`. Kenney has no cohesive mouse/wheat/miner, so two placeholder seeds were renamed
+to their art (mouse→"Meadow Rabbit", wheat→"Hearty Stew") — **ids + mechanics unchanged**,
+reversible. _Owner is trying it to judge the feel._
 
 Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs live.
 - Toolchain: Vite + TypeScript (strict) + ESLint (flat) + Vitest. `package.json` scripts:

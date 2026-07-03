@@ -8,17 +8,18 @@ Primary source: **Kenney.nl** (CC0). Fallbacks: **OpenGameArt** and **Freesound*
 CC0 only.
 
 ## Symbols (icons)
-_Chosen family: **original flat vector set** authored for this project (single cohesive style:
-64×64 SVG, rounded flat shapes, shared palette). Released **CC0**. These are placeholders that
-can be swapped for a Kenney.nl CC0 pack later if a different look is wanted._
+_Chosen family: **Kenney CC0 flat-color sprites** from two cohesive packs (Generic Items +
+Animal Pack Redux), normalized to a uniform 128×128 canvas. All CC0 — no attribution required;
+credited here as a provenance log. Full sourcing rationale + rejected packs in
+`docs/assets/pack-map.md`._
 
-| artRef | Source | License | Notes |
-|--------|--------|---------|-------|
-| assets/symbols/copper-coin.svg | Original (this repo) | CC0 | Gold coin w/ star |
-| assets/symbols/field-mouse.svg | Original (this repo) | CC0 | Grey mouse |
-| assets/symbols/wheat-sheaf.svg | Original (this repo) | CC0 | Wheat stalk |
-| assets/symbols/prospector.svg | Original (this repo) | CC0 | Pickaxe |
-| assets/symbols/raw-ore.svg | Original (this repo) | CC0 | Rock + gem |
+| artRef | Source pack (URL) | License | Notes |
+|--------|-------------------|---------|-------|
+| assets/symbols/copper-coin.png | [Kenney Generic Items](https://kenney.nl/assets/generic-items) | CC0 | `genericItem_color_159` — coin |
+| assets/symbols/prospector.png | [Kenney Generic Items](https://kenney.nl/assets/generic-items) | CC0 | `genericItem_color_021` — pickaxe (prospector's tool) |
+| assets/symbols/wheat-sheaf.png | [Kenney Generic Items](https://kenney.nl/assets/generic-items) | CC0 | `genericItem_color_128` — bowl (symbol shown as "Hearty Stew") |
+| assets/symbols/raw-ore.png | [Kenney Generic Items](https://kenney.nl/assets/generic-items) | CC0 | `genericItem_color_161` — nugget |
+| assets/symbols/field-mouse.png | [Kenney Animal Pack Redux](https://kenney.nl/assets/animal-pack-redux) (CC0 mirror: opengameart.org) | CC0 | `rabbit` (symbol shown as "Meadow Rabbit") |
 
 ## Audio (SFX)
 | soundRef | Source URL | License | Notes |

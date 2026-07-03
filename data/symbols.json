@@ -12,13 +12,13 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/copper-coin.svg",
+      "artRef": "assets/symbols/copper-coin.png",
       "soundRef": "assets/sfx/coin.ogg",
       "devNotes": "Baseline filler. The 1-coin reference symbol used to anchor EV."
     },
     {
       "id": "field-mouse",
-      "name": "Field Mouse",
+      "name": "Meadow Rabbit",
       "rarity": "common",
       "baseValue": 1,
       "tags": ["animal"],
@@ -28,27 +28,27 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/field-mouse.svg",
+      "artRef": "assets/symbols/field-mouse.png",
       "soundRef": "assets/sfx/squeak.ogg",
-      "devNotes": "Cheap animal that rewards a food-heavy pool placed next to it (self-buff model)."
+      "devNotes": "Cheap animal that rewards adjacent food (self-buff). Name matched to the available CC0 art (Kenney rabbit); id kept stable. Mechanics unchanged."
     },
     {
       "id": "wheat-sheaf",
-      "name": "Wheat Sheaf",
+      "name": "Hearty Stew",
       "rarity": "common",
       "baseValue": 1,
-      "tags": ["food", "plant"],
+      "tags": ["food"],
       "synergies": [
         { "withTag": "animal", "effect": "add", "value": 1, "note": "+1 for each animal on the board." }
       ],
       "destroys": [],
       "transforms": [],
       "spawnRules": [
-        { "spawns": "wheat-sheaf", "chance": 0.05, "note": "Occasionally propagates into the shared pool." }
+        { "spawns": "wheat-sheaf", "chance": 0.05, "note": "Occasionally serves up another bowl into the shared pool." }
       ],
-      "artRef": "assets/symbols/wheat-sheaf.svg",
+      "artRef": "assets/symbols/wheat-sheaf.png",
       "soundRef": "assets/sfx/rustle.ogg",
-      "devNotes": "Food backbone symbol; light spawner to grow the shared pool."
+      "devNotes": "Food backbone; light spawner. Name matched to the available CC0 art (Kenney stew bowl); id kept stable, 'plant' tag dropped. Mechanics unchanged."
     },
     {
       "id": "prospector",
@@ -62,7 +62,7 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/prospector.svg",
+      "artRef": "assets/symbols/prospector.png",
       "soundRef": "assets/sfx/pickaxe.ogg",
       "devNotes": "Scaler that pays double when it shares the board with a mineral. Multiply resolves after adds (self-buff model)."
     },
@@ -76,7 +76,7 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/raw-ore.svg",
+      "artRef": "assets/symbols/raw-ore.png",
       "soundRef": "assets/sfx/clink.ogg",
       "devNotes": "Mineral payload for Prospector. A future 'smelter' symbol will add a transform raw-ore -> silver-ingot once that id exists; the validator would reject the dangling target until then (see test/fixtures/invalid-symbols.json)."
     }
