@@ -61,6 +61,12 @@ at once. A pick is **blocked (skip only) when it would break the cap** `own ≤ 
 **both confirm the same** one. If they can't agree, either may **skip** (no shared add that
 round). This is the deliberate "talk to each other" co-op beat (resolves §13 R-G3).
 
+**Presentation (v1):** both draws are shown **together** on one screen — *Your pool* (own) and
+*Shared pool*, visually distinct — with a selection in each and a single **Confirm**. Engine:
+`spin()` draws both offers up-front (phase `draft`); `resolveDrafts(ownChoice, sharedChoice)`
+applies both. (For 2-player, both players select simultaneously; the shared pick becomes the
+consensus beat.)
+
 **Skipping is always allowed** in both beats (prevents pool bloat past the board size — resolves
 §13 R-G2). Skip grants no reward in v1 (**[OPEN]** could later grant a small coin or a reroll).
 Design intents: individual draft = personal build agency; communal draft = shared strategy that

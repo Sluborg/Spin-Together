@@ -53,7 +53,9 @@ export function spin(state: GameState, config: GameConfig): GameState {
     cells: resolved.cells.map((c) => ({ symbolId: c.symbolId, payout: c.payout })),
     total: resolved.total,
   };
+  // Draw BOTH draft offers up-front (own, then shared) so the UI can present them together.
   const ownOffer = offerSymbols(rng, config.allSymbolIds, symbolsById, economy, economy.draft.cardsOffered);
+  const sharedOffer = offerSymbols(rng, config.allSymbolIds, symbolsById, economy, economy.draft.cardsOffered);
   const { canDraftOwn } = resolveDraftConstraints(
     state.ownPool.length,
     state.sharedPool.length,
@@ -66,46 +68,39 @@ export function spin(state: GameState, config: GameConfig): GameState {
     roundInDeadline: state.roundInDeadline + 1,
     lastSpin,
     ownOffer,
-    sharedOffer: [],
+    sharedOffer,
     canDraftOwn,
-    phase: 'draftOwn',
+    phase: 'draft',
     log: pushLog(state.log, `Spin paid ${resolved.total}. Coffer ${state.coffer + resolved.total}.`),
   };
 }
 
-/** Individual draft: pick an offered index for the OWN pool, or null to skip. */
-export function chooseOwn(state: GameState, config: GameConfig, choice: number | null): GameState {
-  if (state.phase !== 'draftOwn') return state;
-  const { economy, symbolsById } = config;
-  let ownPool = state.ownPool;
-  let log = state.log;
-  if (choice !== null && state.canDraftOwn && choice >= 0 && choice < state.ownOffer.length) {
-    const picked = state.ownOffer[choice];
-    ownPool = [...ownPool, picked];
-    log = pushLog(log, `Drafted ${symbolsById.get(picked)?.name ?? picked} to your pool.`);
-  } else {
-    log = pushLog(log, state.canDraftOwn ? 'Skipped own draft.' : 'Own pool at cap — skipped.');
-  }
-  const rng = makeRng(state.rngState);
-  const sharedOffer = offerSymbols(rng, config.allSymbolIds, symbolsById, economy, economy.draft.cardsOffered);
-  return { ...state, rngState: rng.state, ownPool, sharedOffer, ownOffer: [], phase: 'draftShared', log };
-}
-
 /**
- * Communal draft: pick an offered index for the SHARED pool, or null to skip. Then resolve the
+ * Resolve both drafts at once: `ownChoice`/`sharedChoice` are the selected offer indices (or null
+ * to skip). Applies the own pick (subject to the guardrail) and the shared pick, then resolves the
  * deadline if this round completed it (pay rent / grow board / win / lose).
  */
-export function chooseShared(state: GameState, config: GameConfig, choice: number | null): GameState {
-  if (state.phase !== 'draftShared') return state;
+export function resolveDrafts(
+  state: GameState,
+  config: GameConfig,
+  ownChoice: number | null,
+  sharedChoice: number | null,
+): GameState {
+  if (state.phase !== 'draft') return state;
   const { economy, symbolsById } = config;
+  let ownPool = state.ownPool;
   let sharedPool = state.sharedPool;
   let log = state.log;
-  if (choice !== null && choice >= 0 && choice < state.sharedOffer.length) {
-    const picked = state.sharedOffer[choice];
+
+  if (ownChoice !== null && state.canDraftOwn && ownChoice >= 0 && ownChoice < state.ownOffer.length) {
+    const picked = state.ownOffer[ownChoice];
+    ownPool = [...ownPool, picked];
+    log = pushLog(log, `Drafted ${symbolsById.get(picked)?.name ?? picked} to your pool.`);
+  }
+  if (sharedChoice !== null && sharedChoice >= 0 && sharedChoice < state.sharedOffer.length) {
+    const picked = state.sharedOffer[sharedChoice];
     sharedPool = [...sharedPool, picked];
     log = pushLog(log, `Added ${symbolsById.get(picked)?.name ?? picked} to the shared pool.`);
-  } else {
-    log = pushLog(log, 'Skipped shared draft.');
   }
 
   let { deadline, roundInDeadline, coffer, cols, rows } = state;
@@ -138,7 +133,9 @@ export function chooseShared(state: GameState, config: GameConfig, choice: numbe
 
   return {
     ...state,
+    ownPool,
     sharedPool,
+    ownOffer: [],
     sharedOffer: [],
     deadline,
     roundInDeadline,

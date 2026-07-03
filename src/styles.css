@@ -141,21 +141,21 @@ body {
 .slot__pay {
   position: absolute;
   right: -3px;
-  bottom: -4px;
-  min-width: 16px;
-  height: 16px;
+  bottom: -3px;
+  min-width: 14px;
+  height: 14px;
   padding: 0 3px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
-  background: radial-gradient(circle at 34% 30%, #ffe595, #f2bb46 62%, #d89a2b);
-  border: 1.5px solid #7a4d13;
-  color: #4a2e08;
-  font-size: 0.52rem;
+  border-radius: 4px; /* rounded rectangle — a value tag, not a coin */
+  background: linear-gradient(180deg, #ffd257, #eaa42c);
+  border: 1px solid #7a4d13;
+  color: #3a2405;
+  font-size: 0.55rem;
   font-weight: 800;
   line-height: 1;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Reel spin animation */
@@ -315,6 +315,89 @@ body {
   line-height: 1.2;
 }
 
+/* Draft: selection feedback + own/shared distinction */
+.card {
+  position: relative;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.08s ease;
+}
+.card--disabled {
+  opacity: 0.4;
+}
+.card--own.card--selected {
+  border-color: #f2c14e;
+  box-shadow: 0 0 0 2px #f2c14e, 0 0 14px rgba(242, 193, 78, 0.5);
+  transform: translateY(-3px);
+}
+.card--shared.card--selected {
+  border-color: #57cdd6;
+  box-shadow: 0 0 0 2px #57cdd6, 0 0 14px rgba(87, 205, 214, 0.5);
+  transform: translateY(-3px);
+}
+.card__check {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #14131a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.card--own .card__check {
+  background: #f2c14e;
+}
+.card--shared .card__check {
+  background: #57cdd6;
+}
+
+.draft-sec {
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid transparent;
+}
+.draft-sec--own {
+  background: rgba(242, 193, 78, 0.07);
+  border-color: rgba(242, 193, 78, 0.45);
+}
+.draft-sec--shared {
+  background: rgba(87, 205, 214, 0.08);
+  border-color: rgba(87, 205, 214, 0.45);
+}
+.draft-sec__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  padding: 0 2px;
+}
+.draft-sec__title {
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+.draft-sec--own .draft-sec__title {
+  color: #f2c14e;
+}
+.draft-sec--shared .draft-sec__title {
+  color: #63d0d8;
+}
+.draft-sec__tag {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.btn--confirm {
+  width: 100%;
+  margin-top: 4px;
+}
+
 /* Centered draft overlay + hide/show toggle */
 .overlay {
   position: fixed;
@@ -337,6 +420,18 @@ body {
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+}
+
+.panel--draft {
+  max-width: min(94vw, 460px);
+  max-height: 92vh;
+  overflow-y: auto;
+}
+.panel--draft .card {
+  min-height: 104px;
+}
+.panel--draft .cards {
+  margin-bottom: 0;
 }
 
 .panel__head {

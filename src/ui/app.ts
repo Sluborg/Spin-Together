@@ -4,7 +4,7 @@
 // peekable. Symbols render as CC0 icons (artRef) with an emoji fallback if the image is missing.
 import type { GameConfig, SpinResult } from '../engine/state';
 import type { Symbol as GameSymbol } from '../engine/types';
-import { createGame, spin, chooseOwn, chooseShared } from '../engine/game';
+import { createGame, spin, resolveDrafts } from '../engine/game';
 import { rentFor, roundsForDeadline } from '../engine/economy';
 import { glyphFor } from './glyph';
 
@@ -13,6 +13,8 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   let state = createGame(seed, config);
   let draftHidden = false; // UI-only: is the centered draft overlay collapsed?
   let spinning = false; // UI-only: reels are mid-animation
+  let ownSel: number | null = null; // UI-only: selected own-draft index (null = skip)
+  let sharedSel: number | null = null; // UI-only: selected shared-draft index (null = skip)
 
   const sym = (id: string | null): GameSymbol | undefined => (id ? config.symbolsById.get(id) : undefined);
 
@@ -64,31 +66,23 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     return wrap;
   }
 
-  const maxCols = Math.max(...config.economy.boardGrowth.map((g) => g.cols));
-  const maxRows = Math.max(...config.economy.boardGrowth.map((g) => g.rows));
-
-  // Render the full maxCols×maxRows cabinet as vertical reels; the current board region is
-  // centered and "active", the surrounding slots preview the growth (dimmed).
+  // Render the current board (state.cols × state.rows) as a slot-machine cabinet of vertical reels.
+  // The board grows over the run; we only show what's currently in play.
   function boardArea(): HTMLElement {
     const area = el('main', 'board-area');
     const machine = el('div', 'machine');
     const reels = el('div', 'reels');
-    reels.style.setProperty('--reelcount', String(maxCols));
-
     const aCols = state.cols;
     const aRows = state.rows;
-    // Anchor the active region to the top-left; growth adds reels to the right and rows below.
-    const colStart = 0;
-    const rowStart = 0;
+    reels.style.setProperty('--reelcount', String(aCols));
     const cells = state.lastSpin && state.lastSpin.cells.length === aCols * aRows ? state.lastSpin.cells : null;
 
-    for (let c = 0; c < maxCols; c++) {
+    for (let c = 0; c < aCols; c++) {
       const reel = el('div', 'reel');
-      reel.style.setProperty('--slots', String(maxRows));
-      for (let r = 0; r < maxRows; r++) {
-        const active = c >= colStart && c < colStart + aCols && r >= rowStart && r < rowStart + aRows;
-        const slot = el('div', active ? 'slot' : 'slot slot--inactive');
-        const placed = active && cells ? cells[(r - rowStart) * aCols + (c - colStart)] : null;
+      reel.style.setProperty('--slots', String(aRows));
+      for (let r = 0; r < aRows; r++) {
+        const slot = el('div', 'slot');
+        const placed = cells ? cells[r * aCols + c] : null;
         if (placed && placed.symbolId) {
           slot.append(glyphNode(sym(placed.symbolId), 'in-cell'));
           if (placed.payout > 0) slot.append(el('span', 'slot__pay', `+${placed.payout}`));
@@ -104,60 +98,76 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     return area;
   }
 
-  function card(id: string, onPick: () => void, disabled: boolean): HTMLElement {
+  // A selectable draft card. `selected` highlights it; disabled cards can't be picked.
+  function card(id: string, kind: 'own' | 'shared', selected: boolean, onSelect: () => void, disabled: boolean): HTMLElement {
     const s = sym(id);
-    const c = el('button', 'card');
+    const cls = `card card--${kind}` + (selected ? ' card--selected' : '') + (disabled ? ' card--disabled' : '');
+    const c = el('button', cls) as HTMLButtonElement;
+    if (selected) c.append(el('span', 'card__check', '✓'));
     c.append(glyphNode(s, 'in-card'));
     c.append(el('span', 'card__name', s?.name ?? id));
     c.append(el('span', `card__rarity card__rarity--${s?.rarity ?? 'common'}`, s?.rarity ?? ''));
     c.append(el('span', 'card__hint', s?.synergies[0]?.note ?? (s ? `Pays ${s.baseValue}` : '')));
-    if (disabled) (c as HTMLButtonElement).disabled = true;
-    else c.addEventListener('click', onPick);
+    if (disabled) c.disabled = true;
+    else c.addEventListener('click', onSelect);
     return c;
   }
 
-  function skipBtn(onClick: () => void): HTMLElement {
-    const b = el('button', 'btn btn--skip', 'Skip');
-    b.addEventListener('click', onClick);
-    return b;
+  // One draft section (own or shared): a titled row of selectable cards. Tapping toggles selection
+  // (tap again to deselect = skip). Own is locked when the pool is at the guardrail cap.
+  function draftSection(kind: 'own' | 'shared'): HTMLElement {
+    const isOwn = kind === 'own';
+    const offers = isOwn ? state.ownOffer : state.sharedOffer;
+    const sel = isOwn ? ownSel : sharedSel;
+    const locked = isOwn && !state.canDraftOwn;
+    const sec = el('section', `draft-sec draft-sec--${kind}`);
+    const head = el('div', 'draft-sec__head');
+    head.append(el('span', 'draft-sec__title', isOwn ? '🧑 Your pool' : '🤝 Shared pool'));
+    head.append(el('span', 'draft-sec__tag', locked ? 'at cap — skipped' : sel === null ? 'tap to draft · or skip' : 'drafting'));
+    sec.append(head);
+    const row = el('div', 'cards');
+    offers.forEach((id, i) => {
+      const selected = sel === i && !locked;
+      row.append(
+        card(id, kind, selected, () => {
+          if (isOwn) ownSel = ownSel === i ? null : i;
+          else sharedSel = sharedSel === i ? null : i;
+          render();
+        }, locked),
+      );
+    });
+    sec.append(row);
+    return sec;
   }
 
-  /** The centered draft overlay (or a small "show" pill when collapsed). */
-  function draftOverlay(kind: 'own' | 'shared'): HTMLElement {
-    const offers = kind === 'own' ? state.ownOffer : state.sharedOffer;
-    const disabled = kind === 'own' && !state.canDraftOwn;
-    const pick = (i: number): void => {
-      state = kind === 'own' ? chooseOwn(state, config, i) : chooseShared(state, config, i);
-      draftHidden = false;
-      render();
-    };
-    const skip = (): void => {
-      state = kind === 'own' ? chooseOwn(state, config, null) : chooseShared(state, config, null);
-      draftHidden = false;
-      render();
-    };
-
+  /** The combined draft overlay: both pools at once, select in each, then Confirm. */
+  function draftOverlay(): HTMLElement {
     if (draftHidden) {
       const pill = el('button', 'pill', '▲ Show picks');
       pill.addEventListener('click', () => { draftHidden = false; render(); });
       return pill;
     }
-
     const backdrop = el('div', 'overlay');
     backdrop.addEventListener('click', (e) => {
       if (e.target === backdrop) { draftHidden = true; render(); }
     });
-    const panel = el('div', 'panel');
+    const panel = el('div', 'panel panel--draft');
     const head = el('div', 'panel__head');
-    head.append(el('span', 'panel__title', kind === 'own' ? 'Draft to YOUR pool' : 'Agree on a SHARED symbol'));
+    head.append(el('span', 'panel__title', 'Draft'));
     const hide = el('button', 'panel__toggle', 'Hide ▾');
     hide.addEventListener('click', () => { draftHidden = true; render(); });
     head.append(hide);
-    panel.append(head);
-    if (disabled) panel.append(el('p', 'panel__note', 'Your pool is at the cap — skip only'));
-    const row = el('div', 'cards');
-    offers.forEach((id, i) => row.append(card(id, () => pick(i), disabled)));
-    panel.append(row, skipBtn(skip));
+    panel.append(head, draftSection('own'), draftSection('shared'));
+
+    const confirm = el('button', 'btn btn--confirm', 'Confirm');
+    confirm.addEventListener('click', () => {
+      state = resolveDrafts(state, config, ownSel, sharedSel);
+      ownSel = null;
+      sharedSel = null;
+      draftHidden = false;
+      render();
+    });
+    panel.append(confirm);
     backdrop.append(panel);
     return backdrop;
   }
@@ -171,8 +181,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
       area.append(btn);
       return area;
     }
-    if (state.phase === 'draftOwn') return draftOverlay('own');
-    if (state.phase === 'draftShared') return draftOverlay('shared');
+    if (state.phase === 'draft') return draftOverlay();
     if (state.phase === 'won' || state.phase === 'lost') {
       const area = el('section', 'actions');
       area.append(el('p', `endscreen endscreen--${state.phase}`, state.phase === 'won' ? '🎉 You win together!' : '💀 Evicted'));
@@ -208,8 +217,11 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     spinning = true;
     render(); // disable the button; board still shows the prior result
     if (final) await animateReels(final, state.cols, state.rows);
+    await wait(900); // hold on the result so it can be read before the draft opens
     spinning = false;
     state = result;
+    ownSel = null;
+    sharedSel = null;
     draftHidden = false;
     render();
   }

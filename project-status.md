@@ -10,12 +10,14 @@ win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless pla
 (reached D4 / 5×5, synergies compute correctly, zero console errors).
 
 **UI polish (post-Phase 2):**
-- **Board = slot machine** with a real **reel spin animation**: pressing Spin rolls the active
-  reels (staggered left→right, symbols cycling) and lands each with a bounce, then opens the
-  draft; button shows "Spinning…" and is disabled mid-spin. UI-only (engine result unchanged).
-- Dark cabinet, 6 vertical cream reel strips (LBAL-style) with slot dots. Footprint is the full
-  **6×6**; active region **top-left aligned** (cream), locked/preview slots a distinct **slate**
-  color. Board starts **3×3**, grows to 6×6 (economy.boardGrowth). Smaller cells than before.
+- **Board = slot machine** with a **reel spin**: reels scroll symbols **downward** one row at a
+  time, land staggered left→right with a bounce, then **hold ~0.9s so the result reads** before
+  the draft opens. Only the **current board** is shown (starts **3×3**, grows to 6×6); no 6×6
+  preview. Per-slot payout is a small **rounded-rect gold tag** (radius 4, not a coin).
+- **Combined draft:** one overlay shows **both pools at once** — **Your pool** (gold) and
+  **Shared pool** (teal), visually distinct. Tap a card in each to select (glow + ✓ feedback;
+  tap again / leave blank to skip), then **Confirm** applies both. Engine reducer `resolveDrafts`
+  replaced the sequential chooseOwn/chooseShared (phase `draft`; both offers drawn up-front).
 - **Sprites: frame-free 16px pixel** (Tiny-style). Kenney Tiny Farm for farmer/hen/carrot;
   coin + gem are **original CC0 pixel art** (Kenney's Tiny *item* tiles carry an inventory-slot
   frame — the "thick brown border" — so they're avoided). Crisp via `image-rendering: pixelated`.

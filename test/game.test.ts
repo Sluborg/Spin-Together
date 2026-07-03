@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createGame, makeConfig, spin, chooseOwn, chooseShared } from '../src/engine/game';
+import { createGame, makeConfig, spin, resolveDrafts } from '../src/engine/game';
 import type { GameState, GameConfig } from '../src/engine/state';
 import type { SymbolsFile, Economy } from '../src/engine/types';
 import realSymbols from '../data/symbols.json';
@@ -7,30 +7,27 @@ import realEconomy from '../data/economy.json';
 
 const config = makeConfig(realSymbols as SymbolsFile, realEconomy as unknown as Economy);
 
-/** Play one full round (spin → own draft → shared draft) with fixed choices. */
+/** Play one full round (spin → resolve both drafts) with fixed choices. */
 function round(s: GameState, c: GameConfig, own: number | null, shared: number | null): GameState {
-  return chooseShared(chooseOwn(spin(s, c), c, own), c, shared);
+  return resolveDrafts(spin(s, c), c, own, shared);
 }
 
 describe('game loop', () => {
-  it('advances phases spin → draftOwn → draftShared → ready', () => {
+  it('advances phases spin → draft → ready, offering both draws', () => {
     let s = createGame(1, config);
     expect(s.phase).toBe('ready');
     s = spin(s, config);
-    expect(s.phase).toBe('draftOwn');
+    expect(s.phase).toBe('draft');
     expect(s.ownOffer).toHaveLength(3);
-    s = chooseOwn(s, config, 0);
-    expect(s.phase).toBe('draftShared');
     expect(s.sharedOffer).toHaveLength(3);
-    s = chooseShared(s, config, 0);
-    expect(['ready', 'rent', 'won', 'lost']).toContain(s.phase);
+    s = resolveDrafts(s, config, 0, 0);
+    expect(['ready', 'won', 'lost']).toContain(s.phase);
   });
 
   it('is fully deterministic: same seed + same intents → identical state', () => {
     const play = () => {
       let s = createGame(12345, config);
-      for (let i = 0; i < 10 && (s.phase === 'ready' || s.phase === 'draftOwn' || s.phase === 'draftShared'); i++) {
-        if (s.phase !== 'ready') break;
+      for (let i = 0; i < 10 && s.phase === 'ready'; i++) {
         s = round(s, config, 0, 0);
       }
       return s;
@@ -82,13 +79,13 @@ function miniConfig(rentBase: number): GameConfig {
 describe('deadline resolution', () => {
   it('wins when the coffer covers rent at the final deadline', () => {
     const c = miniConfig(50); // 2 gems * 100 = 200 banked >= 50
-    const s = chooseShared(chooseOwn(spin(createGame(1, c), c), c, null), c, null);
+    const s = resolveDrafts(spin(createGame(1, c), c), c, null, null);
     expect(s.phase).toBe('won');
   });
 
   it('loses when the coffer cannot cover rent', () => {
     const c = miniConfig(10_000); // way more than 200
-    const s = chooseShared(chooseOwn(spin(createGame(1, c), c), c, null), c, null);
+    const s = resolveDrafts(spin(createGame(1, c), c), c, null, null);
     expect(s.phase).toBe('lost');
   });
 });

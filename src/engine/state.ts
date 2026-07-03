@@ -17,9 +17,7 @@ export interface SpinResult {
 
 export type Phase =
   | 'ready' // awaiting a spin
-  | 'draftOwn' // choosing 1-of-3 for own pool (or skip)
-  | 'draftShared' // choosing 1-of-3 for shared pool (or skip)
-  | 'rent' // rent just resolved (transient, UI shows result)
+  | 'draft' // choosing 1-of-3 for own AND 1-of-3 for shared (either skippable), then confirm
   | 'won'
   | 'lost';
 
