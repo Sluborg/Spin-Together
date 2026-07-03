@@ -18,13 +18,18 @@ Phased delivery. **Each phase ends playable on the dev URL.** Stop after each ph
 - Minimal app: load `data/*.json`, render an empty board (4×4) responsively on a phone.
 - **Done when:** both Pages URLs respond and the board renders on a real phone.
 
-## Phase 2 — Solo core loop
-- Seeded RNG (mulberry32) with golden vectors.
-- Payout engine (TDD): base → [canonical resolution order, see GAME_DESIGN §9].
-- Synergy resolver, draft (1-of-3), rent deadlines, board growth.
-- Guardrail math (`resolveDraftConstraints`) — **pending owner decision on §13 R-D1**.
-- Playable solo run start→win/lose.
-- **Done when:** a solo run is completable on the dev URL.
+## Phase 2 — Core loop (solo harness)
+Builds + TDDs the pure engine and a single-device playable loop; the two-player round
+sync (individual + communal consensus draft over P2P) is Phase 4.
+- Seeded RNG (mulberry32) with golden vectors; integer coin math.
+- Payout engine (TDD): canonical order base → destroy → transform → spawn → add → multiply → sum
+  (GAME_DESIGN §9), single-pass snapshot semantics + degenerate-case tests (§13 R-Q2).
+- Synergy resolver; draft (1-of-3) **to own** and **to shared**, with **skip**; rent deadlines;
+  board growth (16→36).
+- Guardrail `resolveDraftConstraints(own, shared) → {canDraftOwn}` — ✅ **confirmed** hard cap
+  `own ≤ shared+5`, skip-only at cap (§8); property-tested after every transition (§13 R-Q6).
+- Playable solo run start → win/lose on the dev URL.
+- **Done when:** a run is completable on the dev URL and the engine test suite is green.
 
 ## Phase 3 — Dev tools
 - Symbol browser (filter by tag/rarity), synergy graph (buffs/destroys/spawns), live value

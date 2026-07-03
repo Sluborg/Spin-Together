@@ -14,46 +14,57 @@ every deadline. Lose together, win together.
 
 Inspired by the *mechanics* of Luck Be A Landlord (LBAL); zero LBAL assets or names.
 
-## 2. Core loop
+## 2. Core loop (round-based — both players always active)
 ```
-   ┌─ spin (active player) ──────────────────────────────────────┐
-   │  board fills from active player's (own ∪ shared) pool        │
-   │  payouts resolve (canonical order, §9): base → destroy →     │
-   │  transform → spawn → synergy add → synergy multiply → sum     │
-   │  coins added to the SHARED coffer                            │
-   ├─ dual draft (both players, simultaneously) ─────────────────┤
-   │  active player: pick 1 of 3 → OWN pool                       │
-   │  co-player:     pick 1 of 3 → SHARED pool                    │
-   ├─ turn passes to the other player ───────────────────────────┤
-   └─ every N spins: RENT DEADLINE — pay shared rent or evicted ──┘
-   at milestone deadlines the BOARD GROWS (see §6)
+   ┌─ ROUND ─────────────────────────────────────────────────────┐
+   │ 1. Player 1 spins their board (own₁ ∪ shared)                │
+   │ 2. Player 2 spins their board (own₂ ∪ shared)                │
+   │    payouts resolve (canonical order §9): base → destroy →    │
+   │    transform → spawn → add → multiply → sum. BOTH players'   │
+   │    payouts feed the one shared COFFER.                       │
+   │ 3. INDIVIDUAL draft (simultaneous): each player picks 1 of 3 │
+   │    → their OWN pool. SKIPPABLE. Blocked at the cap (§8).     │
+   │ 4. COMMUNAL draft (consensus): both pick from the same 3;    │
+   │    each sees the other's pick and must CONFIRM the same      │
+   │    symbol → SHARED pool. SKIPPABLE if they can't agree.      │
+   └─ every N rounds: RENT DEADLINE — pay shared rent or evicted ─┘
+   at milestone deadlines the BOARD(S) GROW (see §6)
 ```
 
-## 3. Co-op model
+## 3. Co-op model — **[CONFIRMED by owner, supersedes the earlier alternating-turns sketch]**
 - **One shared landlord / one shared rent** that scales per deadline (§7). Both players'
   payouts flow into a single shared coffer. Rent is paid from it. **Lose together / win
   together.**
-- **Turns alternate.** Only the active player spins. The **non-spinning player stays engaged**
-  by (a) watching the live board sync over P2P and (b) making the **shared** draft pick every
-  spin (§5).
+- **Rounds, not alternating turns.** Each round *both* players spin their own board (own ∪
+  shared) and both then draft. **Neither player is ever a spectator** — this resolves the
+  "non-spinner watches" problem (§13 R-G1). Spins may be sequenced (P1 then P2) for shared-board
+  clarity, but both act every round.
+- **Two boards.** Player 1's board draws from own₁ ∪ shared; Player 2's from own₂ ∪ shared.
+  The shared pool is the collaboration surface present on *both* boards.
 
 ## 4. Symbol pools
 - Each player has an **own pool** (personal). There is **one shared pool** both draw from.
-- On your turn, the spin draws the board from **own ∪ shared** (your own pool plus the shared
-  pool). Your co-player's own pool is *not* in your draw.
+- Your board's spin draws from **own ∪ shared** (your own pool plus the shared pool) each round.
+  Your co-player's own pool is *not* in your draw.
 - This means the shared pool is the collaboration surface: symbols placed there help *both*
   players and are where co-op synergy strategies are built.
 
-## 5. Dual draft (every spin) — **[REC]**
-After each spin, **two** drafts happen simultaneously:
-- **Active player** drafts **1 of 3** offered symbols → their **own** pool.
-- **Co-player** drafts **1 of 3** offered symbols → the **shared** pool.
+## 5. Draft — **[CONFIRMED by owner]** individual, then communal
+After both players spin, each round has **two draft beats**:
 
-**[REC]** Run this **every spin** so the non-spinner acts on every turn (max engagement).
-- Rejected alt: shared draft only every *other* spin — reduces non-spinner engagement and
-  makes turns feel passive.
+**5a. Individual draft (simultaneous, private → revealed).** Each player is offered 3 symbols
+(host RNG, seeded, rarity-weighted) and picks **1 → their own pool**, or **skips**. Both resolve
+at once. A pick is **blocked (skip only) when it would break the cap** `own ≤ shared + 5` (§8).
 
-Offered cards are drawn by the host RNG (seeded) weighted by rarity and by the guardrail (§8).
+**5b. Communal draft (consensus).** Both players are offered the **same** 3 symbols for the
+**shared pool**. Each selects; **each sees the other's selection**; the symbol is only added when
+**both confirm the same** one. If they can't agree, either may **skip** (no shared add that
+round). This is the deliberate "talk to each other" co-op beat (resolves §13 R-G3).
+
+**Skipping is always allowed** in both beats (prevents pool bloat past the board size — resolves
+§13 R-G2). Skip grants no reward in v1 (**[OPEN]** could later grant a small coin or a reroll).
+Design intents: individual draft = personal build agency; communal draft = shared strategy that
+requires agreement. Both are pure, host-authoritative, and unit-testable.
 
 ## 6. Board growth
 Board starts small and grows at deadline milestones, replacing LBAL's fixed 5×4:
@@ -74,37 +85,34 @@ board size *and* deadline index. All growth thresholds live in `data/economy.jso
   index. Starting point to tune: `base = 25`, `growth = 1.53` → `rent_8 ≈ 750` (LBAL-like
   25 → ~750 climb). *(Correction: an earlier draft used `growth = 1.7`, which overshoots to
   ~1744 by d8 — see §13 R-E2.)* Phase 5 replaces the scalar with a per-deadline vector.
-- **Spins per deadline:** shared across the two alternating players; scales up over the run
-  (start ~6, end ~10), mirroring LBAL's 5→10.
+- **Rounds per deadline:** each round = both players spin once (2 spins feeding the coffer).
+  `economy.spinsPerDeadline` counts *total* spins; rounds ≈ that ÷ 2. Scales up over the run,
+  mirroring LBAL's 5→10 pacing. (No 2× rent factor — throughput is already in the spin count;
+  §13 R-E5.)
 - **Calibration target:** `EV_per_spin × spins_per_deadline ≈ 1.3–1.6 × rent_d` across the
   run (tense but winnable with reasonable drafting). EV is measured by the `balance-report`
   skill, not guessed.
 - **v1 length: 8 deadlines** **[REC]** (~15–20 min mobile run) rather than LBAL's 12.
   - **[OPEN]** Confirm 8; 10 or 12 are viable if longer runs are wanted.
 
-## 8. Divergence guardrail — **[REC] hybrid soft-ramp + hard-cap**
-Constraint from owner: **`own ≤ shared + 5`** (own pool must not outgrow shared by >5).
-`gap = ownCount − sharedCount`.
+## 8. Divergence guardrail — **[CONFIRMED by owner]** hard cap + always-skippable
+Constraint: **`own ≤ shared + 5`** per player. `gap = ownCount − sharedCount`.
 
-Evaluated three mechanisms:
+Under the round-based loop (§2) each player adds to their own pool every round, so own can now
+genuinely outpace shared — the cap **actually binds** (this was the core flaw the reviews found;
+see §13 R-D1). The owner's chosen mechanism is the simple, humane one:
+- **You may draft to your own pool only while `gap < 5`.** When `gap = 5`, the individual draft
+  (§5a) offers **skip only** for that player until the shared pool catches up.
+- **Skip is always available anyway** (§5), so the cap never *confiscates* a pick — it just means
+  "can't add own right now," which the player was always free to choose.
 
-| Mechanism | Type | Pro | Con |
-|-----------|------|-----|-----|
-| Pure hard cap (`own ≤ shared+5` enforced by silently blocking own drafts) | hard | trivial, guaranteed | abrupt; a rejected draft feels bad; no warning ramp |
-| Pure soft dilution (down-weight own-pool odds as gap grows) | soft | smooth, keeps agency | no hard guarantee — can still drift past +5 with unlucky offers |
-| **Hybrid: soft ramp then hard backstop** | both | smooth *and* guaranteed | slightly more logic (still one pure function) |
-
-**[REC] Hybrid**, implemented as a pure function `resolveDraftConstraints(ownCount, sharedCount)`:
-- `gap ≤ 2` → **normal**: 3 own-pool draft cards; no dilution.
-- `gap 3–4` → **soft ramp**: one of the 3 personal slots becomes a "donate to shared" card,
-  and own-pool draw odds get a mild dilution weight so shared value stays attractive.
-- `gap = 5` → **hard backstop**: personal draft is locked; the pick redirects to shared until
-  the gap closes.
-
-Rationale: preserves player agency for the vast majority of a run (soft), while *guaranteeing*
-divergence never exceeds 5 (hard). Fully data-driven and unit-testable.
-- **[OPEN]** Confirm the `+5` threshold and the ramp band (2 / 3–4 / 5). Easy to retune in
-  `data/economy.json`.
+Implemented as a pure function `resolveDraftConstraints(ownCount, sharedCount)` returning
+`{ canDraftOwn: boolean }` (plus room for future soft odds-biasing). Fully data-driven
+(`data/economy.json` → `guardrail.maxGap`) and unit-tested (property test: `own ≤ shared+5`
+holds after every transition — §13 R-Q6).
+- **[OPEN]** `+5` threshold is a tuning knob. An optional **soft ramp** (mildly down-weight own
+  offers as `gap` approaches 5) can be layered later purely for feel; the hard cap is the
+  guarantee. *(The earlier "forced redirect to shared" backstop is dropped — skip covers it.)*
 
 ## 9. Symbols (data-driven — `data/symbols.json`)
 Schema per symbol:
@@ -163,12 +171,12 @@ pay ×1.5", "each deadline, add a random common to shared". Full schema finalize
 ## 12. Open questions summary (each with a recommendation)
 | # | Question | Recommendation |
 |---|----------|----------------|
-| Q1 | Rendering stack | vanilla TS + DOM/CSS Grid + Vite (ADR 001) |
-| Q2 | Guardrail mechanism | Hybrid soft-ramp + hard-cap (§8) |
+| Q1 | Rendering stack | ✅ vanilla TS + DOM/CSS Grid + Vite (ADR 001) |
+| Q2 | Guardrail mechanism | ✅ **CONFIRMED**: hard cap `own ≤ shared+5`, skip-only at cap (§8) |
 | Q3 | Board growth schedule | 4×4→6×6 tied to deadlines (§6) |
-| Q4 | Run length | 8 deadlines for v1 (§7) |
+| Q4 | Run length | 8 deadlines for v1 (§7) — [OPEN] confirm |
 | Q5 | Payout resolution order | destroy→transform→spawn→add→multiply (§9), TDD'd |
-| Q6 | Dual-draft cadence | every spin (§5) |
+| Q6 | Draft model | ✅ **CONFIRMED**: round-based; individual own draft + communal consensus shared draft; both skippable (§2/§5) |
 | Q7 | Item schema depth | finalize in Phase 5 (§10) |
 | Q8 | Icon art family | one CC0 family (asset-fetcher picks; documented in CREDITS.md) |
 
@@ -177,7 +185,15 @@ Four independent reviewers (game designer, network/mobile engineer, economy anal
 skeptic) critiqued the Phase 0 draft. Findings below, grouped, with **disposition**. Severities:
 `[BLOCKER] [SHOULD-FIX] [NICE]`.
 
-### ⭐ Headline: the guardrail can never fire (two reviewers, independently) — **OWNER DECISION NEEDED**
+### ⭐ Headline: the guardrail can never fire (two reviewers, independently) — ✅ **RESOLVED by owner**
+> **Resolution (owner, 2026-07-03):** adopted a **round-based loop** where each round both
+> players spin their own board, then (a) each drafts individually to their **own** pool and
+> (b) both agree on a **communal** pick for the **shared** pool; **all drafts skippable**, and
+> **own is hard-capped at `shared + 5` (skip-only at the cap)**. Because each player now grows
+> their own pool every round, own *can* outpace shared, so the cap genuinely binds — this fixes
+> R-D1 and, via the communal consensus beat + no-spectator rounds, also resolves R-G1/R-G2/R-G3.
+> See revised §2, §3, §5, §8. Original analysis kept below for the record.
+
 - **R-D1 [BLOCKER]** Under §5's *fixed* draft destinations (active player → own every one of
   *their* turns; co-player → shared every spin), the **shared pool grows ~2× as fast as any
   player's own pool**. So `gap = ownCount − sharedCount` trends strongly *negative* and the
