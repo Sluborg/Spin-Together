@@ -1,0 +1,35 @@
+{
+  "$schemaVersion": 1,
+  "note": "Intentionally invalid — negative fixture for the validator's unit test. Do NOT load in the app.",
+  "symbols": [
+    {
+      "id": "dupe",
+      "name": "Duplicate One",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": ["food"],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "x",
+      "soundRef": "x"
+    },
+    {
+      "id": "dupe",
+      "name": "Duplicate Two",
+      "rarity": "legendary",
+      "baseValue": -5,
+      "tags": ["not-a-tag"],
+      "synergies": [
+        { "withTag": "food", "withId": "dupe", "effect": "add", "value": 1 },
+        { "withId": "missing-symbol", "effect": "boop", "value": 2 }
+      ],
+      "destroys": ["also-missing"],
+      "transforms": [{ "from": "dupe", "to": "silver-ingot" }],
+      "spawnRules": [{ "spawns": "ghost", "chance": 1.5 }],
+      "artRef": "x",
+      "soundRef": "x"
+    }
+  ]
+}

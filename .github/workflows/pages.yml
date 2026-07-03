@@ -1,0 +1,76 @@
+name: Deploy Pages (dev + main)
+
+# Composes BOTH branch builds into one Pages artifact regardless of which
+# branch triggered the run, so the two live URLs never drift:
+#   main -> https://sluborg.github.io/Spin-Together/       (site root)
+#   dev  -> https://sluborg.github.io/Spin-Together/dev/   (under /dev/)
+# Requires: repo Settings -> Pages -> Source = "GitHub Actions".
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # --- stable (main) -> site/ ---
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+      - name: Build main
+        working-directory: main
+        run: |
+          npm ci
+          npm run build -- --base=/Spin-Together/
+
+      # --- latest (dev) -> site/dev/ ---
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          path: dev
+      - name: Build dev
+        working-directory: dev
+        run: |
+          npm ci
+          npm run build -- --base=/Spin-Together/dev/
+
+      - name: Assemble site (main at root, dev under /dev/)
+        run: |
+          mkdir -p site
+          cp -r main/dist/. site/
+          mkdir -p site/dev
+          cp -r dev/dist/. site/dev/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

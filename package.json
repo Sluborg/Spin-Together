@@ -1,0 +1,26 @@
+{
+  "name": "spin-together",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Mobile-first 2-player co-op slot-builder roguelite (mechanics-only, CC0).",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "validate-data": "vite-node scripts/validate-data.ts",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1",
+    "vite": "^6.0.5",
+    "vite-node": "^2.1.8",
+    "vitest": "^2.1.8"
+  }
+}
