@@ -12,7 +12,7 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/copper-coin.png",
+      "artRef": "assets/symbols/copper-coin.svg",
       "soundRef": "assets/sfx/coin.ogg",
       "devNotes": "Baseline filler. The 1-coin reference symbol used to anchor EV."
     },
@@ -28,7 +28,7 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/field-mouse.png",
+      "artRef": "assets/symbols/field-mouse.svg",
       "soundRef": "assets/sfx/squeak.ogg",
       "devNotes": "Cheap animal that rewards a food-heavy pool placed next to it (self-buff model)."
     },
@@ -46,7 +46,7 @@
       "spawnRules": [
         { "spawns": "wheat-sheaf", "chance": 0.05, "note": "Occasionally propagates into the shared pool." }
       ],
-      "artRef": "assets/symbols/wheat-sheaf.png",
+      "artRef": "assets/symbols/wheat-sheaf.svg",
       "soundRef": "assets/sfx/rustle.ogg",
       "devNotes": "Food backbone symbol; light spawner to grow the shared pool."
     },
@@ -62,7 +62,7 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/prospector.png",
+      "artRef": "assets/symbols/prospector.svg",
       "soundRef": "assets/sfx/pickaxe.ogg",
       "devNotes": "Scaler that pays double when it shares the board with a mineral. Multiply resolves after adds (self-buff model)."
     },
@@ -76,7 +76,7 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/raw-ore.png",
+      "artRef": "assets/symbols/raw-ore.svg",
       "soundRef": "assets/sfx/clink.ogg",
       "devNotes": "Mineral payload for Prospector. A future 'smelter' symbol will add a transform raw-ore -> silver-ingot once that id exists; the validator would reject the dangling target until then (see test/fixtures/invalid-symbols.json)."
     }
