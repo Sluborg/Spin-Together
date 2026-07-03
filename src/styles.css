@@ -148,6 +148,34 @@ body {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
+/* Reel spin animation */
+.slot--rolling {
+  filter: blur(0.6px);
+}
+.slot--rolling .sym-img {
+  opacity: 0.92;
+}
+
+@keyframes slot-land {
+  0% {
+    transform: translateY(-12%) scale(1.18);
+  }
+  55% {
+    transform: translateY(0) scale(0.9);
+  }
+  100% {
+    transform: none;
+  }
+}
+.slot--land {
+  animation: slot-land 0.2s ease-out;
+}
+
+.btn:disabled {
+  opacity: 0.75;
+  cursor: default;
+}
+
 .sym-img {
   /* CC0 pixel-art sprites — keep the pixels crisp when scaled */
   image-rendering: pixelated;

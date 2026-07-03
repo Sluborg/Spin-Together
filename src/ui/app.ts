@@ -2,7 +2,7 @@
 // rebuilds the screen; user actions dispatch pure reducers and re-render. No game logic here.
 // Draft selections appear as a CENTERED overlay with a hide/show toggle so the board stays
 // peekable. Symbols render as CC0 icons (artRef) with an emoji fallback if the image is missing.
-import type { GameConfig } from '../engine/state';
+import type { GameConfig, SpinResult } from '../engine/state';
 import type { Symbol as GameSymbol } from '../engine/types';
 import { createGame, spin, chooseOwn, chooseShared } from '../engine/game';
 import { rentFor, roundsForDeadline } from '../engine/economy';
@@ -12,6 +12,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   let seed = initialSeed;
   let state = createGame(seed, config);
   let draftHidden = false; // UI-only: is the centered draft overlay collapsed?
+  let spinning = false; // UI-only: reels are mid-animation
 
   const sym = (id: string | null): GameSymbol | undefined => (id ? config.symbolsById.get(id) : undefined);
 
@@ -164,8 +165,9 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   function actions(): HTMLElement | null {
     if (state.phase === 'ready') {
       const area = el('section', 'actions');
-      const btn = el('button', 'btn btn--spin', '🎰 Spin');
-      btn.addEventListener('click', () => { state = spin(state, config); draftHidden = false; render(); });
+      const btn = el('button', 'btn btn--spin', spinning ? 'Spinning…' : '🎰 Spin') as HTMLButtonElement;
+      if (spinning) btn.disabled = true;
+      else btn.addEventListener('click', () => void runSpin());
       area.append(btn);
       return area;
     }
@@ -186,6 +188,74 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     const wrap = el('footer', 'log');
     state.log.slice(-4).forEach((line) => wrap.append(el('div', 'log__line', line)));
     return wrap;
+  }
+
+  const wait = (ms: number): Promise<void> => new Promise((res) => setTimeout(res, ms));
+
+  function randomSprite(): HTMLElement {
+    const ids = config.allSymbolIds;
+    const id = ids[Math.floor(Math.random() * ids.length)];
+    return glyphNode(sym(id), 'in-cell');
+  }
+
+  /**
+   * Spin the reels: compute the result, roll each active reel (staggered left→right), then land
+   * on the final symbols with a bounce, and finally open the draft. UI-only; engine is unchanged.
+   */
+  async function runSpin(): Promise<void> {
+    if (spinning || state.phase !== 'ready') return;
+    const result = spin(state, config);
+    const final = result.lastSpin;
+    spinning = true;
+    render(); // disable the button; board still shows the prior result
+    if (final) await animateReels(final, state.cols, state.rows);
+    spinning = false;
+    state = result;
+    draftHidden = false;
+    render();
+  }
+
+  function animateReels(final: SpinResult, aCols: number, aRows: number): Promise<void> {
+    const reelsEl = root.querySelector('.reels');
+    if (!reelsEl) return Promise.resolve();
+    const reels = Array.from(reelsEl.children) as HTMLElement[];
+    const TICK = 65;
+    const BASE = 480;
+    const STAGGER = 140;
+
+    const perReel = (c: number): Promise<void> => {
+      const reel = reels[c];
+      if (!reel) return Promise.resolve();
+      const slots = Array.from(reel.children).slice(0, aRows) as HTMLElement[]; // top-left active rows
+      const iv = setInterval(() => {
+        for (const slot of slots) {
+          slot.textContent = '';
+          slot.classList.add('slot--rolling');
+          slot.appendChild(randomSprite());
+        }
+      }, TICK);
+      return wait(BASE + c * STAGGER).then(() => {
+        clearInterval(iv);
+        for (let r = 0; r < aRows; r++) {
+          const slot = slots[r];
+          slot.textContent = '';
+          slot.classList.remove('slot--rolling');
+          const cell = final.cells[r * aCols + c];
+          if (cell && cell.symbolId) {
+            slot.appendChild(glyphNode(sym(cell.symbolId), 'in-cell'));
+            if (cell.payout > 0) slot.appendChild(el('span', 'slot__pay', `+${cell.payout}`));
+            slot.classList.add('slot--land');
+            setTimeout(() => slot.classList.remove('slot--land'), 220);
+          } else {
+            slot.appendChild(el('span', 'slot__dot'));
+          }
+        }
+      });
+    };
+
+    const jobs: Promise<void>[] = [];
+    for (let c = 0; c < aCols; c++) jobs.push(perReel(c));
+    return Promise.all(jobs).then(() => undefined);
   }
 
   function render(): void {

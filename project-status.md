@@ -10,10 +10,12 @@ win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless pla
 (reached D4 / 5×5, synergies compute correctly, zero console errors).
 
 **UI polish (post-Phase 2):**
-- **Board = slot machine.** A dark cabinet holds 6 vertical cream reel strips (LBAL-style) with
-  slot dots. Footprint is the full **6×6**; the active board region is **top-left aligned** (cream)
-  and locked/preview slots are a distinct **slate** color. Board now starts **3×3** and grows to
-  6×6 (economy.boardGrowth). Smaller cells than the old grid.
+- **Board = slot machine** with a real **reel spin animation**: pressing Spin rolls the active
+  reels (staggered left→right, symbols cycling) and lands each with a bounce, then opens the
+  draft; button shows "Spinning…" and is disabled mid-spin. UI-only (engine result unchanged).
+- Dark cabinet, 6 vertical cream reel strips (LBAL-style) with slot dots. Footprint is the full
+  **6×6**; active region **top-left aligned** (cream), locked/preview slots a distinct **slate**
+  color. Board starts **3×3**, grows to 6×6 (economy.boardGrowth). Smaller cells than before.
 - **Sprites: frame-free 16px pixel** (Tiny-style). Kenney Tiny Farm for farmer/hen/carrot;
   coin + gem are **original CC0 pixel art** (Kenney's Tiny *item* tiles carry an inventory-slot
   frame — the "thick brown border" — so they're avoided). Crisp via `image-rendering: pixelated`.
