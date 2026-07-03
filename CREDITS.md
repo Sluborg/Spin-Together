@@ -8,18 +8,17 @@ Primary source: **Kenney.nl** (CC0). Fallbacks: **OpenGameArt** and **Freesound*
 CC0 only.
 
 ## Symbols (icons)
-_Chosen family: **Kenney CC0 flat-color sprites** from two cohesive packs (Generic Items +
-Animal Pack Redux), normalized to a uniform 128×128 canvas. All CC0 — no attribution required;
-credited here as a provenance log. Full sourcing rationale + rejected packs in
-`docs/assets/pack-map.md`._
+_Chosen family: **Kenney "Tiny" pixel-art** (Tiny Farm + Tiny Dungeon, 16×16), upscaled
+nearest-neighbor and normalized to 128×128. All CC0 — no attribution required; credited here as a
+provenance log. Full sourcing rationale + rejected packs in `docs/assets/pack-map.md`._
 
 | artRef | Source pack (URL) | License | Notes |
 |--------|-------------------|---------|-------|
-| assets/symbols/copper-coin.png | [Kenney Generic Items](https://kenney.nl/assets/generic-items) | CC0 | `genericItem_color_159` — coin |
-| assets/symbols/prospector.png | [Kenney Generic Items](https://kenney.nl/assets/generic-items) | CC0 | `genericItem_color_021` — pickaxe (prospector's tool) |
-| assets/symbols/wheat-sheaf.png | [Kenney Generic Items](https://kenney.nl/assets/generic-items) | CC0 | `genericItem_color_128` — bowl (symbol shown as "Hearty Stew") |
-| assets/symbols/raw-ore.png | [Kenney Generic Items](https://kenney.nl/assets/generic-items) | CC0 | `genericItem_color_161` — nugget |
-| assets/symbols/field-mouse.png | [Kenney Animal Pack Redux](https://kenney.nl/assets/animal-pack-redux) (CC0 mirror: opengameart.org) | CC0 | `rabbit` (symbol shown as "Meadow Rabbit") |
+| assets/symbols/wheat-sheaf.png | [Kenney Tiny Farm](https://kenney.nl/assets/tiny-farm) | CC0 | `tile_0070` — wheat sack ("Wheat Sheaf") |
+| assets/symbols/raw-ore.png | [Kenney Tiny Farm](https://kenney.nl/assets/tiny-farm) | CC0 | `tile_0089` — rock pile ("Raw Ore") |
+| assets/symbols/prospector.png | [Kenney Tiny Farm](https://kenney.nl/assets/tiny-farm) | CC0 | `tile_0109` — farmer ("Prospector") |
+| assets/symbols/field-mouse.png | [Kenney Tiny Farm](https://kenney.nl/assets/tiny-farm) | CC0 | `tile_0122` — chicken ("Barn Hen") |
+| assets/symbols/copper-coin.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0102` — gem ("Gemstone") |
 
 ## Audio (SFX)
 | soundRef | Source URL | License | Notes |

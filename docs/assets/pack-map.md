@@ -1,33 +1,37 @@
 # Symbol art — pack map
 
-How each symbol's art is sourced. All packs are **CC0** (Kenney.nl). Sprites are normalized on
-import to a uniform 128×128 canvas with ~10% padding (via `scripts`/Pillow), so the board reads
-consistently. Provenance rows are in `CREDITS.md`.
+How each symbol's art is sourced. All packs are **CC0** (Kenney.nl). Art style: **pixel-art
+(Kenney "Tiny" family, 16×16)**, upscaled with nearest-neighbor and normalized to a uniform
+128×128 canvas (~18% padding). Provenance rows are in `CREDITS.md`.
 
 ## Source packs (all CC0, Kenney.nl)
 | Pack | Style | Used for |
 |------|-------|----------|
-| [Generic Items](https://kenney.nl/assets/generic-items) | flat color, shaded 2D items | coin, pickaxe, stew bowl, ore nugget |
-| [Animal Pack Redux](https://kenney.nl/assets/animal-pack-redux) (via OpenGameArt CC0 mirror) | flat color, round animal | rabbit |
+| [Tiny Farm](https://kenney.nl/assets/tiny-farm) | 16px pixel | wheat, farmer, rock, hen |
+| [Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | 16px pixel | gem |
 
-## Per-symbol mapping (tag → pack → sprite)
-| Symbol id | Tag(s) | Display name | Pack | Sprite | Match |
-|-----------|--------|--------------|------|--------|-------|
-| copper-coin | treasure | Copper Coin | Generic Items | `genericItem_color_159` (coin) | literal |
-| prospector | human, scaler | Prospector | Generic Items | `genericItem_color_021` (pickaxe) | trade-tool stand-in (no miner sprite in a cohesive flat pack) |
-| field-mouse | animal | **Meadow Rabbit** | Animal Pack Redux | `rabbit` | name matched to art — Kenney has no mouse/rat in a cohesive flat pack; id + mechanics kept |
-| wheat-sheaf | food | **Hearty Stew** | Generic Items | `genericItem_color_128` (bowl) | name matched to art — no wheat/grain in a cohesive flat pack; id + mechanics kept, `plant` tag dropped |
-| raw-ore | mineral | Raw Ore | Generic Items | `genericItem_color_161` (nugget) | literal-ish (nugget = raw ore) |
+Both are the same "Tiny" pixel family (shared 16px grid, palette, outline), so they cohere on
+one board.
 
-## Rejected / not used
-- **Kenney Platformer Art Deluxe** — earlier attempt; shaded-cartoon platformer style clashed
-  with a clean board and required an alien-as-prospector substitution. Rejected.
-- **Kenney Food Kit** — 3D-rendered isometric food; perspective/shading clash with flat 2D. Rejected.
-- **Kenney Puzzle Pack 2** — match-3 *tiles* (square backgrounds), not standalone gems; would
-  clash. Rejected (so `raw-ore` uses the Generic Items nugget instead of a puzzle gem).
+## Per-symbol mapping (id → tag → name → pack → tile)
+| Symbol id | Tag(s) | Display name | Pack | Tile | Match |
+|-----------|--------|--------------|------|------|-------|
+| wheat-sheaf | food | **Wheat Sheaf** | Tiny Farm | `tile_0070` (wheat sack) | literal ✓ |
+| raw-ore | mineral | **Raw Ore** | Tiny Farm | `tile_0089` (rock pile) | literal ✓ |
+| prospector | human, scaler | Prospector | Tiny Farm | `tile_0109` (farmer) | person stand-in (rustic prospector) |
+| field-mouse | animal | **Barn Hen** | Tiny Farm | `tile_0122` (chicken) | renamed — Tiny family has no mouse; a hen "pecks food", matching the +food mechanic |
+| copper-coin | treasure | **Gemstone** | Tiny Dungeon | `tile_0102` (gem) | renamed — no coin in these packs; gem = treasure filler |
 
-## Notes / known gaps
-- Kenney's catalog has **no cohesive flat-color mouse, wheat, or human-miner**, so two
-  placeholder seed symbols were renamed to their available art (mouse→rabbit, wheat→stew). All
-  **ids and mechanics are unchanged** — only display `name`/`artRef`/flavor moved. Fully reversible.
-- This map grows as `content-filler` adds symbols/tags; new tags get a pack assignment here first.
+All **ids, tags, and mechanics are unchanged** — only display `name`/`artRef`/flavor moved. Fully reversible.
+
+## Rejected / superseded
+- **Generic Items** (flat color) — owner disliked the tilted/angled look. Superseded by Tiny pixel.
+- **Animal Pack Redux** (flat) — used briefly for a rabbit; superseded (no mouse anyway).
+- **Platformer Art Deluxe / Food Kit (3D) / Puzzle Pack 2 (tiles)** — style clashes; rejected earlier.
+
+## Owner-surveyed packs (candidates for future symbols)
+From the owner's own CC0 survey — assign these as the roster grows (keep to the pixel family for
+cohesion where possible): Tiny Town (tools, beehive), Tiny Battle (vehicles), Tiny Dungeon
+(heroes, potions, weapons), Pixel Platformer + Food/Farm expansions (food, wheat, sunflower,
+pumpkin), Desert Shooter (rabbit, **mouse**), Sci-Fi RTS (ore piles), Map Pack (trees, mushrooms),
+Voxel Pack (gems). Note: mixing non-Tiny styles risks clashing — normalize + drop clashers.

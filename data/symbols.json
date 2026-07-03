@@ -4,7 +4,7 @@
   "symbols": [
     {
       "id": "copper-coin",
-      "name": "Copper Coin",
+      "name": "Gemstone",
       "rarity": "common",
       "baseValue": 1,
       "tags": ["treasure"],
@@ -14,11 +14,11 @@
       "spawnRules": [],
       "artRef": "assets/symbols/copper-coin.png",
       "soundRef": "assets/sfx/coin.ogg",
-      "devNotes": "Baseline filler. The 1-coin reference symbol used to anchor EV."
+      "devNotes": "Baseline treasure filler (anchors EV). Name matched to available CC0 art (Kenney Tiny Dungeon gem); id kept stable."
     },
     {
       "id": "field-mouse",
-      "name": "Meadow Rabbit",
+      "name": "Barn Hen",
       "rarity": "common",
       "baseValue": 1,
       "tags": ["animal"],
@@ -30,11 +30,11 @@
       "spawnRules": [],
       "artRef": "assets/symbols/field-mouse.png",
       "soundRef": "assets/sfx/squeak.ogg",
-      "devNotes": "Cheap animal that rewards adjacent food (self-buff). Name matched to the available CC0 art (Kenney rabbit); id kept stable. Mechanics unchanged."
+      "devNotes": "Cheap animal that pecks adjacent food (self-buff). Name matched to available CC0 art (Kenney Tiny Farm hen); id kept stable. Mechanics unchanged."
     },
     {
       "id": "wheat-sheaf",
-      "name": "Hearty Stew",
+      "name": "Wheat Sheaf",
       "rarity": "common",
       "baseValue": 1,
       "tags": ["food"],
@@ -44,11 +44,11 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [
-        { "spawns": "wheat-sheaf", "chance": 0.05, "note": "Occasionally serves up another bowl into the shared pool." }
+        { "spawns": "wheat-sheaf", "chance": 0.05, "note": "Occasionally propagates another sheaf into the shared pool." }
       ],
       "artRef": "assets/symbols/wheat-sheaf.png",
       "soundRef": "assets/sfx/rustle.ogg",
-      "devNotes": "Food backbone; light spawner. Name matched to the available CC0 art (Kenney stew bowl); id kept stable, 'plant' tag dropped. Mechanics unchanged."
+      "devNotes": "Food backbone; light spawner. CC0 art: Kenney Tiny Farm wheat sack. Mechanics unchanged."
     },
     {
       "id": "prospector",
