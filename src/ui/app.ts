@@ -2,7 +2,7 @@
 // rebuilds the screen; user actions dispatch pure reducers and re-render. No game logic here.
 // Draft selections appear as a CENTERED overlay with a hide/show toggle so the board stays
 // peekable. Symbols render as CC0 icons (artRef) with an emoji fallback if the image is missing.
-import type { GameConfig, SpinResult } from '../engine/state';
+import type { GameConfig, GameState, SpinResult } from '../engine/state';
 import type { Symbol as GameSymbol } from '../engine/types';
 import { createGame, spin, resolveDrafts } from '../engine/game';
 import { rentFor, roundsForDeadline } from '../engine/economy';
@@ -15,6 +15,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   let spinning = false; // UI-only: reels are mid-animation
   let ownSel: number | null = null; // UI-only: selected own-draft index (null = skip)
   let sharedSel: number | null = null; // UI-only: selected shared-draft index (null = skip)
+  let pendingResult: GameState | null = null; // spun result being shown; player taps Continue to draft
 
   const sym = (id: string | null): GameSymbol | undefined => (id ? config.symbolsById.get(id) : undefined);
 
@@ -47,35 +48,58 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   }
 
   function hud(): HTMLElement {
-    const rent = rentFor(config.economy, state.deadline);
-    const spinsThis = roundsForDeadline(config.economy, state.deadline);
+    const view = pendingResult ?? state;
+    const won = view.phase === 'won';
+    const rent = rentFor(config.economy, view.deadline);
+    const total = roundsForDeadline(config.economy, view.deadline);
+    const done = Math.min(view.roundInDeadline, total);
+    const left = Math.max(0, total - done);
+    const covered = view.coffer >= rent;
+    const pct = Math.max(0, Math.min(100, Math.round((done / total) * 100)));
+
     const wrap = el('header', 'hud');
-    const stats = el('div', 'hud__stats');
-    const stat = (label: string, value: string): HTMLElement => {
-      const s = el('div', 'stat');
-      s.append(el('span', 'stat__label', label), el('span', 'stat__value', value));
-      return s;
-    };
-    stats.append(
-      stat('Coffer', String(state.coffer)),
-      stat(`Rent D${state.deadline}`, state.phase === 'won' ? '—' : String(rent)),
-      stat('Spins', `${Math.min(state.roundInDeadline, spinsThis)} / ${spinsThis}`),
-      stat('Board', `${state.cols}×${state.rows}`),
+    wrap.append(el('div', 'hud__brand', 'Spin-Together'));
+    const bar = el('div', 'hud__bar');
+
+    // Gold — your currency, styled like the payout tags.
+    const gold = el('div', 'gold');
+    gold.append(el('span', 'gold__label', 'GOLD'), el('span', 'gold__val', String(view.coffer)));
+
+    // Rent — the goal: how much is due, when, and whether you're covered.
+    const rentCard = el('div', 'rent');
+    const rhead = el('div', 'rent__head');
+    rhead.append(
+      el('span', 'rent__label', 'RENT'),
+      el('span', 'rent__deadline', `Deadline ${Math.min(view.deadline, config.economy.run.deadlines)}/${config.economy.run.deadlines}`),
     );
-    wrap.append(el('h1', 'hud__title', 'Spin-Together'), stats);
+    rentCard.append(rhead, el('span', 'rent__val', won ? 'PAID' : String(rent)));
+    if (!won) {
+      const prog = el('div', 'rent__prog');
+      const track = el('div', 'rent__track');
+      const fill = el('i');
+      fill.style.width = `${pct}%`;
+      track.append(fill);
+      prog.append(track, el('span', 'rent__spins', left > 0 ? `${left} spin${left === 1 ? '' : 's'} left` : 'due now'));
+      const status = el('span', `rent__status ${covered ? 'rent__status--ok' : ''}`, covered ? '✓ covered — bank extra' : `need ${rent - view.coffer} more`);
+      rentCard.append(prog, status);
+    }
+
+    bar.append(gold, rentCard);
+    wrap.append(bar);
     return wrap;
   }
 
   // Render the current board (state.cols × state.rows) as a slot-machine cabinet of vertical reels.
   // The board grows over the run; we only show what's currently in play.
   function boardArea(): HTMLElement {
+    const view = pendingResult ?? state;
     const area = el('main', 'board-area');
     const machine = el('div', 'machine');
     const reels = el('div', 'reels');
-    const aCols = state.cols;
-    const aRows = state.rows;
+    const aCols = view.cols;
+    const aRows = view.rows;
     reels.style.setProperty('--reelcount', String(aCols));
-    const cells = state.lastSpin && state.lastSpin.cells.length === aCols * aRows ? state.lastSpin.cells : null;
+    const cells = view.lastSpin && view.lastSpin.cells.length === aCols * aRows ? view.lastSpin.cells : null;
 
     for (let c = 0; c < aCols; c++) {
       const reel = el('div', 'reel');
@@ -103,7 +127,6 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     const s = sym(id);
     const cls = `card card--${kind}` + (selected ? ' card--selected' : '') + (disabled ? ' card--disabled' : '');
     const c = el('button', cls) as HTMLButtonElement;
-    if (selected) c.append(el('span', 'card__check', '✓'));
     c.append(glyphNode(s, 'in-card'));
     c.append(el('span', 'card__name', s?.name ?? id));
     c.append(el('span', `card__rarity card__rarity--${s?.rarity ?? 'common'}`, s?.rarity ?? ''));
@@ -173,6 +196,16 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   }
 
   function actions(): HTMLElement | null {
+    if (pendingResult) {
+      // post-spin: let the result read, then continue to the draft on tap
+      const area = el('section', 'actions');
+      const paid = pendingResult.lastSpin?.total ?? 0;
+      area.append(el('p', 'actions__prompt', paid > 0 ? `Spin paid +${paid} gold` : 'No payout this spin'));
+      const btn = el('button', 'btn btn--spin', 'Continue →');
+      btn.addEventListener('click', openDraft);
+      area.append(btn);
+      return area;
+    }
     if (state.phase === 'ready') {
       const area = el('section', 'actions');
       const btn = el('button', 'btn btn--spin', spinning ? 'Spinning…' : '🎰 Spin') as HTMLButtonElement;
@@ -211,15 +244,21 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
    * on the final symbols with a bounce, and finally open the draft. UI-only; engine is unchanged.
    */
   async function runSpin(): Promise<void> {
-    if (spinning || state.phase !== 'ready') return;
+    if (spinning || pendingResult || state.phase !== 'ready') return;
     const result = spin(state, config);
     const final = result.lastSpin;
     spinning = true;
     render(); // disable the button; board still shows the prior result
     if (final) await animateReels(final, state.cols, state.rows);
-    await wait(900); // hold on the result so it can be read before the draft opens
     spinning = false;
-    state = result;
+    pendingResult = result; // hold on the landed result; player taps Continue to open the draft
+    render();
+  }
+
+  function openDraft(): void {
+    if (!pendingResult) return;
+    state = pendingResult;
+    pendingResult = null;
     ownSel = null;
     sharedSel = null;
     draftHidden = false;

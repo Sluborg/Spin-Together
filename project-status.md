@@ -15,9 +15,14 @@ win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless pla
   the draft opens. Only the **current board** is shown (starts **3×3**, grows to 6×6); no 6×6
   preview. Per-slot payout is a small **rounded-rect gold tag** (radius 4, not a coin).
 - **Combined draft:** one overlay shows **both pools at once** — **Your pool** (gold) and
-  **Shared pool** (teal), visually distinct. Tap a card in each to select (glow + ✓ feedback;
-  tap again / leave blank to skip), then **Confirm** applies both. Engine reducer `resolveDrafts`
+  **Shared pool** (teal), visually distinct. Tap a card in each to select (glow feedback; tap
+  again / leave blank to skip), then **Confirm** applies both. Engine reducer `resolveDrafts`
   replaced the sequential chooseOwn/chooseShared (phase `draft`; both offers drawn up-front).
+- **HUD redesign (new-player clarity):** a gold **GOLD** box (styled like the payout tags) + one
+  **RENT** box = amount due, `Deadline n/8`, a progress bar, `N spins left`, and a live
+  `need X more` / `✓ covered` status. Dropped the board-size stat.
+- **Post-spin flow:** the reels land, then a **Continue →** button (with "Spin paid +N gold")
+  lets the player read the result before opening the draft (replaced the fixed delay).
 - **Sprites: frame-free 16px pixel** (Tiny-style). Kenney Tiny Farm for farmer/hen/carrot;
   coin + gem are **original CC0 pixel art** (Kenney's Tiny *item* tiles carry an inventory-slot
   frame — the "thick brown border" — so they're avoided). Crisp via `image-rendering: pixelated`.

@@ -38,41 +38,106 @@ body {
 }
 
 /* HUD */
-.hud__title {
-  font-size: clamp(1.3rem, 6vw, 2rem);
-  letter-spacing: 0.02em;
-  margin: 0 0 8px;
+.hud__brand {
   text-align: center;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 8px;
 }
 
-.hud__stats {
+/* Two focal readouts: GOLD you have, RENT you owe (with countdown + covered status). */
+.hud__bar {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--gap);
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: stretch;
 }
 
-.stat {
-  background: var(--panel);
-  border-radius: 10px;
-  padding: 8px 6px;
+.gold {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  min-height: 44px;
+  justify-content: center;
+  min-width: 88px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffd257, #eaa42c);
+  border: 1px solid #7a4d13;
+  color: #3a2405;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+.gold__label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  opacity: 0.82;
+}
+.gold__val {
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.05;
 }
 
-.stat__label {
+.rent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--cell-edge);
+}
+.rent__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.rent__label {
   font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #ff9f6b;
+}
+.rent__deadline {
+  font-size: 0.58rem;
   color: var(--muted);
 }
-
-.stat__value {
-  font-size: clamp(0.95rem, 4.5vw, 1.25rem);
+.rent__val {
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.rent__prog {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rent__track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.rent__track > i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ffcf5c, #ff8f5c);
+}
+.rent__spins {
+  font-size: 0.6rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.rent__status {
+  font-size: 0.62rem;
   font-weight: 700;
-  color: var(--accent);
+  color: #ff8f6b;
+}
+.rent__status--ok {
+  color: #7ee0a0;
 }
 
 /* Board */
