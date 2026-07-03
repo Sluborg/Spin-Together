@@ -125,7 +125,8 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   // A selectable draft card. `selected` highlights it; disabled cards can't be picked.
   function card(id: string, kind: 'own' | 'shared', selected: boolean, onSelect: () => void, disabled: boolean): HTMLElement {
     const s = sym(id);
-    const cls = `card card--${kind}` + (selected ? ' card--selected' : '') + (disabled ? ' card--disabled' : '');
+    const rarity = s?.rarity ?? 'common';
+    const cls = `card card--${kind} card--rar-${rarity}` + (selected ? ' card--selected' : '') + (disabled ? ' card--disabled' : '');
     const c = el('button', cls) as HTMLButtonElement;
     c.append(glyphNode(s, 'in-card'));
     c.append(el('span', 'card__name', s?.name ?? id));
@@ -208,7 +209,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     }
     if (state.phase === 'ready') {
       const area = el('section', 'actions');
-      const btn = el('button', 'btn btn--spin', spinning ? 'Spinning…' : '🎰 Spin') as HTMLButtonElement;
+      const btn = el('button', 'btn btn--spin', spinning ? 'Spinning…' : 'Spin') as HTMLButtonElement;
       if (spinning) btn.disabled = true;
       else btn.addEventListener('click', () => void runSpin());
       area.append(btn);
@@ -224,12 +225,6 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
       return area;
     }
     return null;
-  }
-
-  function logView(): HTMLElement {
-    const wrap = el('footer', 'log');
-    state.log.slice(-4).forEach((line) => wrap.append(el('div', 'log__line', line)));
-    return wrap;
   }
 
   const wait = (ms: number): Promise<void> => new Promise((res) => setTimeout(res, ms));
@@ -321,7 +316,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
 
   function render(): void {
     root.textContent = '';
-    root.append(hud(), boardArea(), logView());
+    root.append(hud(), boardArea());
     const a = actions();
     if (a) root.append(a); // overlay/pill are position:fixed; inline sections flow normally
   }

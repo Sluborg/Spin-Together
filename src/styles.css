@@ -365,14 +365,32 @@ body {
 
 .card__rarity {
   font-size: 0.6rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
+  letter-spacing: 0.05em;
+  color: var(--rar, var(--muted));
 }
 
-.card__rarity--rare { color: #6ab7ff; }
-.card__rarity--very-rare { color: #c88bff; }
-.card__rarity--special { color: #ff9f6b; }
+/* Rarity coloring — border + label tint per tier */
+.card--rar-common {
+  --rar: #8b93a7;
+}
+.card--rar-uncommon {
+  --rar: #57b85f;
+}
+.card--rar-rare {
+  --rar: #4d8fe0;
+}
+.card--rar-very-rare {
+  --rar: #b06de0;
+}
+.card--rar-special {
+  --rar: #e0913f;
+}
+.card {
+  border-width: 1.5px;
+  border-color: var(--rar, var(--cell-edge));
+}
 
 .card__hint {
   font-size: 0.62rem;

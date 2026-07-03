@@ -23,6 +23,10 @@ win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless pla
   `need X more` / `✓ covered` status. Dropped the board-size stat.
 - **Post-spin flow:** the reels land, then a **Continue →** button (with "Spin paid +N gold")
   lets the player read the result before opening the draft (replaced the fixed delay).
+- **Rarity coloring:** draft cards tint border + label by rarity (common grey · uncommon green ·
+  rare blue · very-rare purple · special orange). Spin button de-iconed ("Spin"). Removed the
+  event-log footer (the single "Spin paid" line covers it).
+- **Deferred:** normalizing per-sprite outline weights (no clean fix-by-rule; would be per-sprite).
 - **Sprites: frame-free 16px pixel** (Tiny-style). Kenney Tiny Farm for farmer/hen/carrot;
   coin + gem are **original CC0 pixel art** (Kenney's Tiny *item* tiles carry an inventory-slot
   frame — the "thick brown border" — so they're avoided). Crisp via `image-rendering: pixelated`.
