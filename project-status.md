@@ -11,8 +11,9 @@ win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless pla
 
 **UI polish (post-Phase 2):**
 - **Board = slot machine.** A dark cabinet holds 6 vertical cream reel strips (LBAL-style) with
-  slot dots. Footprint is the full **6×6**; the current board region is centered + "active",
-  outer ring dimmed to preview the growth. Smaller cells than the old grid.
+  slot dots. Footprint is the full **6×6**; the active board region is **top-left aligned** (cream)
+  and locked/preview slots are a distinct **slate** color. Board now starts **3×3** and grows to
+  6×6 (economy.boardGrowth). Smaller cells than the old grid.
 - **Sprites: frame-free 16px pixel** (Tiny-style). Kenney Tiny Farm for farmer/hen/carrot;
   coin + gem are **original CC0 pixel art** (Kenney's Tiny *item* tiles carry an inventory-slot
   frame — the "thick brown border" — so they're avoided). Crisp via `image-rendering: pixelated`.

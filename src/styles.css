@@ -129,11 +129,13 @@ body {
 }
 
 .slot--inactive {
-  opacity: 0.32;
+  /* not-yet-unlocked positions: a distinct cool slate, clearly different from the warm reels */
+  background: #a6abbe;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.14);
 }
 
 .slot--inactive .slot__dot {
-  background: rgba(70, 48, 24, 0.1);
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .slot__pay {

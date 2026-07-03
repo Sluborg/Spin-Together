@@ -14,11 +14,13 @@
     "note": "d is 1-indexed. growth=1.53 lands rent_8 ~= 750 (25*1.53^8), matching the intended LBAL-like 25->~750 climb; 1.7 was a spec error that overshot to ~1744. Phase 5: replace scalar `growth` with the `growthPerDeadline` vector so rent can bend sub-geometric after d6 (see GAME_DESIGN #R-E3). Calibrate the p25 (not mean) of Monte-Carlo spins vs rent_d."
   },
   "boardGrowth": [
-    { "afterDeadline": 0, "cols": 4, "rows": 4 },
-    { "afterDeadline": 2, "cols": 5, "rows": 4 },
-    { "afterDeadline": 3, "cols": 5, "rows": 5 },
-    { "afterDeadline": 4, "cols": 6, "rows": 5 },
-    { "afterDeadline": 5, "cols": 6, "rows": 6 }
+    { "afterDeadline": 0, "cols": 3, "rows": 3 },
+    { "afterDeadline": 1, "cols": 4, "rows": 3 },
+    { "afterDeadline": 2, "cols": 4, "rows": 4 },
+    { "afterDeadline": 3, "cols": 5, "rows": 4 },
+    { "afterDeadline": 4, "cols": 5, "rows": 5 },
+    { "afterDeadline": 5, "cols": 6, "rows": 5 },
+    { "afterDeadline": 6, "cols": 6, "rows": 6 }
   ],
   "guardrail": {
     "maxGap": 5,

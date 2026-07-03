@@ -76,8 +76,9 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
 
     const aCols = state.cols;
     const aRows = state.rows;
-    const colStart = Math.floor((maxCols - aCols) / 2);
-    const rowStart = Math.floor((maxRows - aRows) / 2);
+    // Anchor the active region to the top-left; growth adds reels to the right and rows below.
+    const colStart = 0;
+    const rowStart = 0;
     const cells = state.lastSpin && state.lastSpin.cells.length === aCols * aRows ? state.lastSpin.cells : null;
 
     for (let c = 0; c < maxCols; c++) {
