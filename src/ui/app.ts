@@ -192,10 +192,9 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
 
   const wait = (ms: number): Promise<void> => new Promise((res) => setTimeout(res, ms));
 
-  function randomSprite(): HTMLElement {
+  function randomId(): string {
     const ids = config.allSymbolIds;
-    const id = ids[Math.floor(Math.random() * ids.length)];
-    return glyphNode(sym(id), 'in-cell');
+    return ids[Math.floor(Math.random() * ids.length)];
   }
 
   /**
@@ -215,47 +214,58 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     render();
   }
 
+  // A reel scroll: symbols travel DOWN the column one position per tick (new symbol enters at the
+  // top, the bottom one falls off), then the final symbols feed in from the top and settle.
   function animateReels(final: SpinResult, aCols: number, aRows: number): Promise<void> {
     const reelsEl = root.querySelector('.reels');
     if (!reelsEl) return Promise.resolve();
     const reels = Array.from(reelsEl.children) as HTMLElement[];
-    const TICK = 65;
-    const BASE = 480;
-    const STAGGER = 140;
 
-    const perReel = (c: number): Promise<void> => {
-      const reel = reels[c];
-      if (!reel) return Promise.resolve();
-      const slots = Array.from(reel.children).slice(0, aRows) as HTMLElement[]; // top-left active rows
-      const iv = setInterval(() => {
-        for (const slot of slots) {
-          slot.textContent = '';
-          slot.classList.add('slot--rolling');
-          slot.appendChild(randomSprite());
-        }
-      }, TICK);
-      return wait(BASE + c * STAGGER).then(() => {
-        clearInterval(iv);
-        for (let r = 0; r < aRows; r++) {
-          const slot = slots[r];
-          slot.textContent = '';
-          slot.classList.remove('slot--rolling');
-          const cell = final.cells[r * aCols + c];
-          if (cell && cell.symbolId) {
-            slot.appendChild(glyphNode(sym(cell.symbolId), 'in-cell'));
-            if (cell.payout > 0) slot.appendChild(el('span', 'slot__pay', `+${cell.payout}`));
-            slot.classList.add('slot--land');
-            setTimeout(() => slot.classList.remove('slot--land'), 220);
-          } else {
-            slot.appendChild(el('span', 'slot__dot'));
-          }
-        }
-      });
+    const fill = (slot: HTMLElement, id: string | null, rolling: boolean, payout = 0): void => {
+      slot.textContent = '';
+      slot.classList.toggle('slot--rolling', rolling);
+      if (id) {
+        slot.appendChild(glyphNode(sym(id), 'in-cell'));
+        if (!rolling && payout > 0) slot.appendChild(el('span', 'slot__pay', `+${payout}`));
+      } else {
+        slot.appendChild(el('span', 'slot__dot'));
+      }
     };
 
-    const jobs: Promise<void>[] = [];
-    for (let c = 0; c < aCols; c++) jobs.push(perReel(c));
-    return Promise.all(jobs).then(() => undefined);
+    const perReel = async (c: number): Promise<void> => {
+      const reel = reels[c];
+      if (!reel) return;
+      const slots = (Array.from(reel.children) as HTMLElement[]).slice(0, aRows); // active (top-left) rows
+      const finals: (string | null)[] = [];
+      for (let r = 0; r < aRows; r++) finals.push(final.cells[r * aCols + c]?.symbolId ?? null);
+
+      let col: (string | null)[] = Array.from({ length: aRows }, () => randomId());
+      const paint = (): void => col.forEach((id, r) => fill(slots[r], id, true));
+
+      const spinTicks = 7 + c; // later reels spin longer → staggered stops (left→right)
+      for (let t = 0; t < spinTicks; t++) {
+        col = [randomId(), ...col.slice(0, aRows - 1)]; // shift DOWN; new symbol in at the top
+        paint();
+        await wait(55);
+      }
+      // feed the real result in from the top (bottom row first) so it settles into place
+      for (let r = aRows - 1; r >= 0; r--) {
+        col = [finals[r], ...col.slice(0, aRows - 1)];
+        paint();
+        await wait(60 + (aRows - 1 - r) * 22); // decelerate as it lands
+      }
+      // settle: final symbols + coin badges + a little bounce
+      for (let r = 0; r < aRows; r++) {
+        const cell = final.cells[r * aCols + c];
+        fill(slots[r], cell?.symbolId ?? null, false, cell?.payout ?? 0);
+        if (cell?.symbolId) {
+          slots[r].classList.add('slot--land');
+          setTimeout(() => slots[r].classList.remove('slot--land'), 220);
+        }
+      }
+    };
+
+    return Promise.all(Array.from({ length: aCols }, (_, c) => perReel(c))).then(() => undefined);
   }
 
   function render(): void {
