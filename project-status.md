@@ -73,10 +73,18 @@ Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs li
 - 31 tests: RNG determinism, payout order + edge cases, guardrail property (`own ≤ shared+5`
   after every transition), win/lose. UI (`src/ui/app.ts`) is a thin DOM view over the reducers.
 
+## Phase 3 (Dev tools) — started
+- **Asset picker** (`?dev=1`): two dropdowns (Kenney **set** + **image**) + a visual grid of
+  **pre-filtered small-object tiles** (terrain/floors/large houses dropped by a transparency +
+  bbox rule — see `scripts/build-dev-assets.py`), a preview, assign-to-symbol, and export
+  assignments JSON. Filtered tiles live in `public/dev-assets/<pack>/` + `manifest.json` (CC0
+  Kenney Tiny Farm/Dungeon/Town/Battle). Lazy-loaded (`src/dev-tools/picker.ts`), not in the
+  game bundle.
+
 ## Next action
-**Await owner approval for Phase 3 (Dev tools):** symbol browser + tag filter, synergy graph,
-in-browser live value editing + JSON export, `balance-report` wired to real data. (Two-player
-P2P is Phase 4; balance tuning is Phase 5.)
+**Phase 3 continued:** wire an "apply assignments" step (copy picked tile → `assets/symbols/` +
+update `artRef`), then the symbol browser + synergy graph + live tuning + `balance-report`.
+(Two-player P2P is Phase 4; balance tuning is Phase 5.)
 
 ## Live URLs
 - Stable: `https://sluborg.github.io/Spin-Together/` — ✅ live

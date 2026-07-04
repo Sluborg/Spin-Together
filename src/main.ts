@@ -20,9 +20,14 @@ const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('#app mount not found');
 
 const config = makeConfig(symbols, economy);
-// Seed: URL ?seed=N for reproducible runs, else a time-derived seed (UI only — engine stays pure).
 const params = new URLSearchParams(location.search);
-const seedParam = params.get('seed');
-const seed = seedParam != null ? Number(seedParam) >>> 0 : (Date.now() & 0xffffffff) >>> 0;
 
-mountApp(app, config, seed);
+if (params.get('dev') === '1') {
+  // Dev-tools asset picker (lazy-loaded; not in the game bundle).
+  void import('./dev-tools/picker').then((m) => m.mountPicker(app, config));
+} else {
+  // Seed: ?seed=N for reproducible runs, else a time-derived seed (UI only — engine stays pure).
+  const seedParam = params.get('seed');
+  const seed = seedParam != null ? Number(seedParam) >>> 0 : (Date.now() & 0xffffffff) >>> 0;
+  mountApp(app, config, seed);
+}
