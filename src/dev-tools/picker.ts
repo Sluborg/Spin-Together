@@ -125,6 +125,9 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
   baseIn.min = '0';
   const tagsIn = el('input', 'dev__in') as HTMLInputElement;
   tagsIn.placeholder = `tags, comma-sep (e.g. ${TAGS.slice(0, 3).join(', ')})`;
+  const notesIn = el('textarea', 'dev__in dev__notes') as HTMLTextAreaElement;
+  notesIn.rows = 2;
+  notesIn.placeholder = 'Notes — describe the mechanic in shorthand, I\'ll code it later. Use #tag and @id, e.g. "+1 to adjacent #plants; ×2 while @gemstone on board".';
 
   const addBtn = el('button', 'btn dev__btn', 'Add / update symbol');
   const newBtn = el('button', 'dev__link', '＋ new (clear form)');
@@ -135,6 +138,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
     field('rarity', rarSel),
     field('base value', baseIn),
     field('tags', tagsIn),
+    field('notes (I\'ll code these later)', notesIn, true),
   );
   const formActions = el('div', 'dev__formActions');
   formActions.append(addBtn, newBtn);
@@ -148,8 +152,8 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
   wrap.append(listEl);
   root.append(wrap);
 
-  function field(label: string, control: HTMLElement): HTMLElement {
-    const w = el('label', 'dev__field');
+  function field(label: string, control: HTMLElement, wide = false): HTMLElement {
+    const w = el('label', 'dev__field' + (wide ? ' dev__field--wide' : ''));
     w.append(el('span', 'dev__label', label), control);
     return w;
   }
@@ -186,6 +190,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
     rarSel.value = w.rarity;
     baseIn.value = String(w.baseValue);
     tagsIn.value = w.tags.join(', ');
+    notesIn.value = w.devNotes;
   }
 
   function renderList(): void {
@@ -196,6 +201,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
       row.append(imgEl(artUrl(w), 'dev__thumb'));
       const meta = el('div', 'dev__ameta');
       meta.append(el('span', 'dev__aname', `${w.name}`), el('span', 'dev__aref', `${w.id} · ${w.rarity} · ${w.baseValue}g · [${w.tags.join(', ')}]${w.art ? ' · ' + w.art : ''}`));
+      if (w.devNotes) meta.append(el('span', 'dev__anote', `📝 ${w.devNotes}`));
       row.append(meta);
       const edit = el('button', 'dev__rm', '✎');
       edit.title = 'edit';
@@ -240,6 +246,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
     w.rarity = rarSel.value;
     w.baseValue = Number(baseIn.value) || 0;
     w.tags = tagsIn.value.split(',').map((t) => t.trim()).filter(Boolean);
+    w.devNotes = notesIn.value.trim();
     if (selTile) w.art = `${manifest.packs[packIdx].slug}/${selTile}`;
     syms.set(id, w);
     renderList();
@@ -251,6 +258,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
     rarSel.value = 'common';
     baseIn.value = '1';
     tagsIn.value = '';
+    notesIn.value = '';
     selectTile(null);
     idIn.focus();
   }
