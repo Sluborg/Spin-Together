@@ -74,17 +74,18 @@ Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs li
   after every transition), win/lose. UI (`src/ui/app.ts`) is a thin DOM view over the reducers.
 
 ## Phase 3 (Dev tools) — started
-- **Asset picker** (`?dev=1`): two dropdowns (Kenney **set** + **image**) + a visual grid of
+- **Asset picker + symbol builder** (`?dev=1`): Kenney **set** dropdown + a visual grid of
   **pre-filtered small-object tiles** (terrain/floors/large houses dropped by a transparency +
-  bbox rule — see `scripts/build-dev-assets.py`), a preview, assign-to-symbol, and export
-  assignments JSON. Filtered tiles live in `public/dev-assets/<pack>/` + `manifest.json` (CC0
-  Kenney Tiny Farm/Dungeon/Town/Battle). Lazy-loaded (`src/dev-tools/picker.ts`), not in the
-  game bundle.
+  bbox rule — `scripts/build-dev-assets.py`). Pick a tile, then **create or edit symbols**
+  (id, name, rarity, baseValue, tags + the picked art) — including brand-new ones — and
+  **Export symbol set JSON** (`{symbols[], art{id→pack/tile}}`). Existing symbols' richer fields
+  (synergies/etc.) are preserved. Filtered tiles in `public/dev-assets/` (CC0 Kenney Tiny
+  Farm/Dungeon/Town/Battle). Lazy chunk (`src/dev-tools/picker.ts`), not in the game bundle.
 
 ## Next action
-**Phase 3 continued:** wire an "apply assignments" step (copy picked tile → `assets/symbols/` +
-update `artRef`), then the symbol browser + synergy graph + live tuning + `balance-report`.
-(Two-player P2P is Phase 4; balance tuning is Phase 5.)
+**Phase 3 continued:** an **apply** step that ingests `symbol-set.json` (write `data/symbols.json`
++ copy picked tiles → `assets/symbols/<id>.png`) so picks go live; then synergy graph + live
+stat tuning + `balance-report`. (Two-player P2P is Phase 4; balance tuning is Phase 5.)
 
 ## Live URLs
 - Stable: `https://sluborg.github.io/Spin-Together/` — ✅ live
