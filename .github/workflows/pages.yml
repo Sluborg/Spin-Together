@@ -69,8 +69,26 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: https://sluborg.github.io/Spin-Together/
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      # GitHub Pages' deployment API intermittently rejects with
+      # "Deployment failed, try again later." even though the build/artifact are fine.
+      # Retry up to 3 times so a transient reject doesn't fail the whole deploy.
+      - name: Deploy to GitHub Pages (attempt 1)
+        id: d1
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - name: Wait before retry
+        if: steps.d1.outcome == 'failure'
+        run: sleep 25
+      - name: Deploy to GitHub Pages (attempt 2)
+        id: d2
+        if: steps.d1.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - name: Wait before final retry
+        if: steps.d1.outcome == 'failure' && steps.d2.outcome == 'failure'
+        run: sleep 45
+      - name: Deploy to GitHub Pages (attempt 3, final)
+        if: steps.d1.outcome == 'failure' && steps.d2.outcome == 'failure'
         uses: actions/deploy-pages@v4
