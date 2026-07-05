@@ -116,6 +116,7 @@ export interface Economy {
     dilutionPerGap: number;
     note?: string;
   };
+  rarityBaseValue: Record<Rarity, number> & { note?: string };
   draft: { cardsOffered: number; rarityWeights: Record<Rarity, number> };
   starter: { own: string[]; shared: string[] };
 }

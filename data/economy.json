@@ -28,6 +28,14 @@
     "dilutionPerGap": 0.15,
     "note": "gap = ownCount - sharedCount. <=2 normal; 3-4 soft ramp (one draft slot -> donate-to-shared, own odds *= (1 - dilutionPerGap*(gap-2))); ==5 hard lock personal draft to shared."
   },
+  "rarityBaseValue": {
+    "note": "Default base payout for a symbol of each rarity — the authoring starting point (dev tool snaps baseValue to this when rarity changes). Rarer = worth more at baseline. Override per-symbol as needed; balance-report tunes the curve.",
+    "common": 1,
+    "uncommon": 2,
+    "rare": 3,
+    "very-rare": 5,
+    "special": 8
+  },
   "draft": {
     "cardsOffered": 3,
     "rarityWeights": { "common": 60, "uncommon": 25, "rare": 11, "very-rare": 3, "special": 1 }

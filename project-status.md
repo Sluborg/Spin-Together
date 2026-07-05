@@ -81,6 +81,13 @@ Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs li
   **Export symbol set JSON** (`{symbols[], art{id→pack/tile}}`). Existing symbols' richer fields
   (synergies/etc.) are preserved. Filtered tiles in `public/dev-assets/` (CC0 Kenney Tiny
   Farm/Dungeon/Town/Battle). Lazy chunk (`src/dev-tools/picker.ts`), not in the game bundle.
+- **Authoring UX:** auto kebab-case **id** from the name; **Save symbol** shows a toast and
+  clears the form to a blank "new symbol" (with a `new symbol` / `editing "X"` status line);
+  **tags** normalized lowercase + de-duped, with a reuse datalist and a `lowercase · singular`
+  hint. Picked-tile **preview sits above the inputs** (dashed "pick a tile" placeholder when
+  empty — no broken-image icon). Tiles already assigned to a symbol show a **✓ "in use" badge**
+  (per session). Changing **rarity snaps base value** to that rarity's default
+  (`economy.rarityBaseValue`: common 1 · uncommon 2 · rare 3 · very-rare 5 · special 8).
 
 ## Content workflow (dev tool → live)
 1. Design in the browser tool (`?dev=1`): browse Kenney art, create/edit symbols (id, name,
