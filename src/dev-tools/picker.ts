@@ -4,6 +4,9 @@
 import type { GameConfig } from '../engine/state';
 import { RARITIES, TAGS } from '../engine/types';
 
+// Repo the "Post as GitHub issue" button targets (dev-tools only; not used by the game).
+const REPO = 'sluborg/spin-together';
+
 interface Manifest {
   packs: { slug: string; name: string; tiles: string[] }[];
 }
@@ -373,6 +376,12 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
     const actions = el('div', 'dev__listactions');
     const exp = el('button', 'btn dev__btn', 'Export symbol set JSON');
     exp.addEventListener('click', exportSet);
+    const copyBtn = el('button', 'dev__link', '⧉ Copy JSON');
+    copyBtn.title = 'Copy the set to the clipboard (paste into an issue or chat)';
+    copyBtn.addEventListener('click', () => void copySet());
+    const issueBtn = el('button', 'dev__link', '⬆ Post as GitHub issue');
+    issueBtn.title = 'Open a prefilled GitHub issue with this set';
+    issueBtn.addEventListener('click', issueSet);
     const reset = el('button', 'dev__link', '↺ Reset to live data');
     reset.title = 'Discard the local draft and reload the symbols currently in the game';
     reset.addEventListener('click', () => {
@@ -389,7 +398,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
       renderList();
       flash('Reset to live data');
     });
-    actions.append(exp, reset);
+    actions.append(exp, copyBtn, issueBtn, reset);
     listEl.append(actions);
   }
 
@@ -445,7 +454,8 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
     nameIn.focus();
   }
 
-  function exportSet(): void {
+  // The exported payload — the same shape scripts/apply-symbol-set.py ingests.
+  function buildSetJSON(): string {
     const symbols = Array.from(syms.values()).map((w) => ({
       id: w.id,
       name: w.name,
@@ -462,12 +472,45 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
     }));
     const art: Record<string, string> = {};
     for (const w of syms.values()) if (w.art) art[w.id] = w.art;
-    const blob = new Blob([JSON.stringify({ symbols, art }, null, 2)], { type: 'application/json' });
+    return JSON.stringify({ symbols, art }, null, 2);
+  }
+
+  function exportSet(): void {
+    const blob = new Blob([buildSetJSON()], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'symbol-set.json';
     a.click();
     URL.revokeObjectURL(a.href);
+  }
+
+  async function copySet(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(buildSetJSON());
+      flash('Copied JSON ✓  (paste into an issue or chat)');
+    } catch {
+      flash('Copy failed — use Export instead');
+    }
+  }
+
+  // Open a prefilled GitHub issue with the set. Small sets go straight into the body
+  // (one tap); large sets exceed the URL limit, so copy to clipboard + open a paste template.
+  function issueSet(): void {
+    const text = buildSetJSON();
+    const base = `https://github.com/${REPO}/issues/new`;
+    const title = `[symbol-set] ${syms.size} symbols`;
+    const intro =
+      'Exported from the symbol builder (?dev=1). Apply with `scripts/apply-symbol-set.py`, ' +
+      'then code the mechanics from each `devNotes`.\n\n';
+    const full = `${base}?title=${encodeURIComponent(title)}&body=${encodeURIComponent(intro + '```json\n' + text + '\n```')}`;
+    if (full.length <= 7500) {
+      window.open(full, '_blank', 'noopener');
+      return;
+    }
+    void navigator.clipboard?.writeText(text);
+    const tmpl = intro + 'The JSON is copied to your clipboard — paste it below as a ```json code block.';
+    window.open(`${base}?title=${encodeURIComponent(title)}&body=${encodeURIComponent(tmpl)}`, '_blank', 'noopener');
+    flash('Set copied — paste it into the issue');
   }
 
   packSel.addEventListener('change', () => {

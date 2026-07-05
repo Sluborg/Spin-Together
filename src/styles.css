@@ -751,7 +751,8 @@ body {
 .dev__listactions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 12px 16px;
   margin-top: 10px;
 }
 .dev__hint {
