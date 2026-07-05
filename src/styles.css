@@ -812,7 +812,7 @@ body {
 }
 .dev__notes {
   resize: vertical;
-  min-height: 44px;
+  min-height: 96px;
   font-family: inherit;
   line-height: 1.35;
 }
@@ -821,4 +821,12 @@ body {
   color: #cdb46a;
   line-height: 1.3;
   margin-top: 2px;
+}
+
+/* Auto id preview under the name */
+.dev__idpreview {
+  font-size: 0.66rem;
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+  margin-top: 3px;
 }

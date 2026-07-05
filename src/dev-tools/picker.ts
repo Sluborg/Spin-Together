@@ -73,6 +73,11 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
 
   let packIdx = 0;
   let selTile: string | null = null;
+  let editId: string | null = null; // id of the symbol being edited (null = new; id derives from name)
+
+  const slug = (s: string): string =>
+    s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const currentId = (): string => editId ?? slug(nameIn.value);
 
   // ---- static layout (built once so the form keeps focus/values when picking tiles) ----
   root.textContent = '';
@@ -108,10 +113,9 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
 
   // ---- symbol form ----
   const form = el('div', 'dev__form');
-  const idIn = el('input', 'dev__in') as HTMLInputElement;
-  idIn.placeholder = 'id (kebab-case)';
   const nameIn = el('input', 'dev__in') as HTMLInputElement;
-  nameIn.placeholder = 'Name';
+  nameIn.placeholder = 'Name (e.g. Odd Egg)';
+  const idPreview = el('span', 'dev__idpreview', 'id: —'); // auto kebab-case id
   const rarSel = el('select', 'dev__in') as HTMLSelectElement;
   RARITIES.forEach((r) => {
     const o = document.createElement('option');
@@ -126,18 +130,19 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
   const tagsIn = el('input', 'dev__in') as HTMLInputElement;
   tagsIn.placeholder = `tags, comma-sep (e.g. ${TAGS.slice(0, 3).join(', ')})`;
   const notesIn = el('textarea', 'dev__in dev__notes') as HTMLTextAreaElement;
-  notesIn.rows = 2;
+  notesIn.rows = 5;
   notesIn.placeholder = 'Notes — describe the mechanic in shorthand, I\'ll code it later. Use #tag and @id, e.g. "+1 to adjacent #plants; ×2 while @gemstone on board".';
 
   const addBtn = el('button', 'btn dev__btn', 'Add / update symbol');
   const newBtn = el('button', 'dev__link', '＋ new (clear form)');
 
+  const nameField = field('name', nameIn, true);
+  nameField.append(idPreview); // live auto-id under the name
   form.append(
-    field('id', idIn),
-    field('name', nameIn),
+    nameField,
     field('rarity', rarSel),
     field('base value', baseIn),
-    field('tags', tagsIn),
+    field('tags', tagsIn, true),
     field('notes (I\'ll code these later)', notesIn, true),
   );
   const formActions = el('div', 'dev__formActions');
@@ -185,12 +190,17 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
   }
 
   function loadForm(w: Work): void {
-    idIn.value = w.id;
+    editId = w.id;
     nameIn.value = w.name;
     rarSel.value = w.rarity;
     baseIn.value = String(w.baseValue);
     tagsIn.value = w.tags.join(', ');
     notesIn.value = w.devNotes;
+    updateIdPreview();
+  }
+
+  function updateIdPreview(): void {
+    idPreview.textContent = `id: ${currentId() || '—'}`;
   }
 
   function renderList(): void {
@@ -221,15 +231,16 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
   }
 
   function addOrUpdate(): void {
-    const id = idIn.value.trim();
-    if (!id) {
-      idIn.focus();
+    const name = nameIn.value.trim();
+    const id = editId ?? slug(name);
+    if (!name || !id) {
+      nameIn.focus();
       return;
     }
     const existing = syms.get(id);
     const w: Work = existing ?? {
       id,
-      name: id,
+      name,
       rarity: 'common',
       baseValue: 1,
       tags: [],
@@ -242,25 +253,28 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
       devNotes: '',
     };
     w.id = id;
-    w.name = nameIn.value.trim() || id;
+    w.name = name;
     w.rarity = rarSel.value;
     w.baseValue = Number(baseIn.value) || 0;
     w.tags = tagsIn.value.split(',').map((t) => t.trim()).filter(Boolean);
     w.devNotes = notesIn.value.trim();
     if (selTile) w.art = `${manifest.packs[packIdx].slug}/${selTile}`;
     syms.set(id, w);
+    editId = id; // now editing this symbol (id stays stable)
+    updateIdPreview();
     renderList();
   }
 
   function clearForm(): void {
-    idIn.value = '';
+    editId = null;
     nameIn.value = '';
     rarSel.value = 'common';
     baseIn.value = '1';
     tagsIn.value = '';
     notesIn.value = '';
     selectTile(null);
-    idIn.focus();
+    updateIdPreview();
+    nameIn.focus();
   }
 
   function exportSet(): void {
@@ -292,6 +306,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
     packIdx = Number(packSel.value);
     renderGrid();
   });
+  nameIn.addEventListener('input', updateIdPreview);
   addBtn.addEventListener('click', addOrUpdate);
   newBtn.addEventListener('click', clearForm);
 
