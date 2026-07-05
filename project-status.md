@@ -82,10 +82,18 @@ Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs li
   (synergies/etc.) are preserved. Filtered tiles in `public/dev-assets/` (CC0 Kenney Tiny
   Farm/Dungeon/Town/Battle). Lazy chunk (`src/dev-tools/picker.ts`), not in the game bundle.
 
+## Content workflow (dev tool → live)
+1. Design in the browser tool (`?dev=1`): browse Kenney art, create/edit symbols (id, name,
+   rarity, baseValue, tags, art, **notes** = shorthand mechanic to code), **Export symbol set JSON**.
+2. `python3 scripts/apply-symbol-set.py symbol-set.json` — replaces the roster in
+   `data/symbols.json` and copies each picked tile → `public/assets/symbols/<id>.png` (normalized
+   to 128px). Echoes every symbol's design note.
+3. Orchestrator implements the noted mechanics as real `synergies/destroys/transforms`.
+4. `npm run validate-data` → commit. (Tested end-to-end; add/edit/remove + art copy + validate.)
+
 ## Next action
-**Phase 3 continued:** an **apply** step that ingests `symbol-set.json` (write `data/symbols.json`
-+ copy picked tiles → `assets/symbols/<id>.png`) so picks go live; then synergy graph + live
-stat tuning + `balance-report`. (Two-player P2P is Phase 4; balance tuning is Phase 5.)
+**Phase 3 continued:** synergy graph viewer + live stat tuning + `balance-report`. (Or: owner
+designs a batch of symbols in the tool and sends the export to apply.) Two-player P2P = Phase 4.
 
 ## Live URLs
 - Stable: `https://sluborg.github.io/Spin-Together/` — ✅ live
