@@ -29,6 +29,17 @@ def norm(src, dst):
     out.save(dst)
 
 
+def recolor(src, hue, dst):
+    """Recolor the (frame-free) gem to a target hue [0..255], keeping shading + alpha.
+    Dark outlines have near-zero saturation so they stay dark."""
+    im = Image.open(src).convert("RGBA")
+    r, g, b, a = im.split()
+    h, s, v = Image.merge("RGB", (r, g, b)).convert("HSV").split()
+    h = h.point(lambda _: hue)
+    rgb = Image.merge("HSV", (h, s, v)).convert("RGB")
+    Image.merge("RGBA", (*rgb.split(), a)).save(dst)
+
+
 def syn(effect, value, tag=None, sid=None, note=""):
     s = {"effect": effect, "value": value, "note": note}
     if tag is not None:
@@ -98,6 +109,70 @@ R = [
     ("tractor", "Tractor", "uncommon", 3, ["vehicle", "tool"],
      [syn("addPerAdjacent", 2, tag="plant", note="+2 for each adjacent plant.")], [], [], "tiny-battle/tile_0169",
      "Harvests: +2 per adjacent crop (plant) — a mobile Watering Can."),
+
+    # --- More gems (frame-free recolors of the original gem) ---
+    ("ruby", "Ruby", "rare", 4, ["mineral", "treasure"], [], [], [], "recolor:0",
+     "Premium red gem: high flat value; feeds Prospector (mineral) and treasure scalers."),
+    ("emerald", "Emerald", "uncommon", 3, ["mineral", "treasure"],
+     [syn("addPerAdjacent", 1, tag="mineral", note="+1 for each adjacent mineral.")], [], [], "recolor:95",
+     "Green gem that veins: +1 per adjacent mineral (cluster your ores/gems)."),
+    ("sapphire", "Sapphire", "uncommon", 3, ["mineral", "treasure"],
+     [syn("add", 1, tag="treasure", note="+1 for each treasure on the board.")], [], [], "recolor:160",
+     "Blue gem that sparkles with wealth: +1 per treasure on the board."),
+
+    # --- Weapons (new 'weapon' tag) — armory + a scaler ---
+    ("sword", "Sword", "common", 2, ["weapon"],
+     [syn("add", 1, tag="weapon", note="+1 for each weapon on the board.")], [], [], "tiny-dungeon/tile_0104",
+     "Arsenal backbone: +1 per weapon on the board (also the Blacksmith's output)."),
+    ("dagger", "Dagger", "common", 1, ["weapon"],
+     [syn("addPerAdjacent", 2, tag="weapon", note="+2 for each adjacent weapon.")], [], [], "tiny-dungeon/tile_0103",
+     "Dual-wield: +2 per adjacent weapon."),
+    ("axe", "Axe", "common", 2, ["weapon", "tool"],
+     [syn("add", 1, tag="weapon", note="+1 for each weapon on the board.")], [], [], "tiny-dungeon/tile_0131",
+     "Weapon that also counts as a tool; +1 per weapon on the board."),
+    ("war-hammer", "War Hammer", "uncommon", 3, ["weapon"],
+     [syn("add", 2, tag="weapon", note="+2 for each weapon on the board.")], [], [], "tiny-dungeon/tile_0117",
+     "Heavy hitter: +2 per weapon on the board."),
+    ("bow", "Bow", "uncommon", 2, ["weapon"],
+     [syn("addPerAdjacent", 2, tag="animal", note="+2 for each adjacent animal.")], [], [], "tiny-town/tile_0118",
+     "Hunts: +2 per adjacent animal — a weapon that loves the farm."),
+    ("knight", "Knight", "rare", 3, ["human", "scaler"],
+     [syn("multiply", 2, tag="weapon", note="Pays x2 while any weapon is on the board.")], [], [], "tiny-battle/tile_0106",
+     "Weapon scaler: doubles when it shares the board with any weapon (Prospector for the armory)."),
+    ("blacksmith", "Blacksmith", "uncommon", 2, ["human", "tool"], [],
+     [{"from": "iron-ingot", "to": "sword", "note": "Forges every Iron Ingot on the board into a Sword."}], [],
+     "tiny-battle/tile_0178",
+     "Bridges the chains: turns Iron Ingots into Swords (ore -> ingot -> sword -> Knight x2)."),
+    ("pitchfork", "Pitchfork", "common", 2, ["tool", "weapon"],
+     [syn("add", 1, tag="animal", note="+1 for each animal on the board.")], [], [], "tiny-town/tile_0116",
+     "Farmhand's weapon: +1 per animal on the board (counts as tool AND weapon)."),
+
+    # --- Potions (new 'potion' tag) — brews + a scaler ---
+    ("red-potion", "Red Potion", "common", 2, ["potion", "treasure"],
+     [syn("add", 1, tag="potion", note="+1 for each potion on the board.")], [], [], "tiny-dungeon/tile_0115",
+     "Brew collection: +1 per potion on the board; counts as treasure."),
+    ("green-potion", "Green Potion", "common", 2, ["potion"],
+     [syn("addPerAdjacent", 2, tag="potion", note="+2 for each adjacent potion.")], [], [], "tiny-dungeon/tile_0114",
+     "Bubbles best in a rack: +2 per adjacent potion."),
+    ("blue-potion", "Blue Potion", "uncommon", 3, ["potion"],
+     [syn("add", 1, tag="potion", note="+1 for each potion on the board.")], [], [], "tiny-dungeon/tile_0116",
+     "Higher-value brew: +1 per potion on the board."),
+    ("alchemist", "Alchemist", "rare", 2, ["human", "scaler"],
+     [syn("multiply", 2, tag="potion", note="Pays x2 while any potion is on the board.")], [], [], "tiny-battle/tile_0142",
+     "Potion scaler: doubles when it shares the board with any potion."),
+
+    # --- More vehicles ---
+    ("cargo-ship", "Cargo Ship", "rare", 3, ["vehicle"],
+     [syn("add", 2, tag="treasure", note="+2 for each treasure on the board.")], [], [], "tiny-battle/tile_0177",
+     "Big hauler: +2 per treasure on the board."),
+    ("crop-duster", "Crop Duster", "uncommon", 2, ["vehicle"],
+     [syn("add", 1, tag="plant", note="+1 for each plant on the board.")], [], [], "tiny-battle/tile_0172",
+     "Dusts the whole field: +1 per plant on the board."),
+
+    # --- More animals ---
+    ("sheep", "Sheep", "common", 1, ["animal"],
+     [syn("add", 1, tag="animal", note="+1 for each animal on the board.")], [], [], "tiny-farm/tile_0120",
+     "Flocks: +1 per animal on the board (cheap herd-builder)."),
 ]
 
 
@@ -110,7 +185,12 @@ def main():
             "synergies": syns, "destroys": [], "transforms": trans, "spawnRules": spawns,
             "artRef": f"assets/symbols/{sid}.png", "soundRef": "", "devNotes": notes,
         })
-        if art:
+        if art and art.startswith("recolor:"):
+            hue = int(art.split(":")[1])
+            gem = os.path.join(SPRITES, "gemstone.png")
+            recolor(gem, hue, os.path.join(SPRITES, f"{sid}.png"))
+            print(f"  art {sid:16s} <- recolor(gem, hue={hue})")
+        elif art:
             slug, tile = art.split("/")
             src = os.path.join(DEV, slug, f"{tile}.png")
             if not os.path.exists(src):

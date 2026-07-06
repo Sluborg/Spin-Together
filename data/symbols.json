@@ -436,6 +436,421 @@
       "artRef": "assets/symbols/tractor.png",
       "soundRef": "",
       "devNotes": "Harvests: +2 per adjacent crop (plant) — a mobile Watering Can."
+    },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "rarity": "rare",
+      "baseValue": 4,
+      "tags": [
+        "mineral",
+        "treasure"
+      ],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/ruby.png",
+      "soundRef": "",
+      "devNotes": "Premium red gem: high flat value; feeds Prospector (mineral) and treasure scalers."
+    },
+    {
+      "id": "emerald",
+      "name": "Emerald",
+      "rarity": "uncommon",
+      "baseValue": 3,
+      "tags": [
+        "mineral",
+        "treasure"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 1,
+          "note": "+1 for each adjacent mineral.",
+          "withTag": "mineral"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/emerald.png",
+      "soundRef": "",
+      "devNotes": "Green gem that veins: +1 per adjacent mineral (cluster your ores/gems)."
+    },
+    {
+      "id": "sapphire",
+      "name": "Sapphire",
+      "rarity": "uncommon",
+      "baseValue": 3,
+      "tags": [
+        "mineral",
+        "treasure"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each treasure on the board.",
+          "withTag": "treasure"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/sapphire.png",
+      "soundRef": "",
+      "devNotes": "Blue gem that sparkles with wealth: +1 per treasure on the board."
+    },
+    {
+      "id": "sword",
+      "name": "Sword",
+      "rarity": "common",
+      "baseValue": 2,
+      "tags": [
+        "weapon"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each weapon on the board.",
+          "withTag": "weapon"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/sword.png",
+      "soundRef": "",
+      "devNotes": "Arsenal backbone: +1 per weapon on the board (also the Blacksmith's output)."
+    },
+    {
+      "id": "dagger",
+      "name": "Dagger",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": [
+        "weapon"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 2,
+          "note": "+2 for each adjacent weapon.",
+          "withTag": "weapon"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/dagger.png",
+      "soundRef": "",
+      "devNotes": "Dual-wield: +2 per adjacent weapon."
+    },
+    {
+      "id": "axe",
+      "name": "Axe",
+      "rarity": "common",
+      "baseValue": 2,
+      "tags": [
+        "weapon",
+        "tool"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each weapon on the board.",
+          "withTag": "weapon"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/axe.png",
+      "soundRef": "",
+      "devNotes": "Weapon that also counts as a tool; +1 per weapon on the board."
+    },
+    {
+      "id": "war-hammer",
+      "name": "War Hammer",
+      "rarity": "uncommon",
+      "baseValue": 3,
+      "tags": [
+        "weapon"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 2,
+          "note": "+2 for each weapon on the board.",
+          "withTag": "weapon"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/war-hammer.png",
+      "soundRef": "",
+      "devNotes": "Heavy hitter: +2 per weapon on the board."
+    },
+    {
+      "id": "bow",
+      "name": "Bow",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": [
+        "weapon"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 2,
+          "note": "+2 for each adjacent animal.",
+          "withTag": "animal"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/bow.png",
+      "soundRef": "",
+      "devNotes": "Hunts: +2 per adjacent animal — a weapon that loves the farm."
+    },
+    {
+      "id": "knight",
+      "name": "Knight",
+      "rarity": "rare",
+      "baseValue": 3,
+      "tags": [
+        "human",
+        "scaler"
+      ],
+      "synergies": [
+        {
+          "effect": "multiply",
+          "value": 2,
+          "note": "Pays x2 while any weapon is on the board.",
+          "withTag": "weapon"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/knight.png",
+      "soundRef": "",
+      "devNotes": "Weapon scaler: doubles when it shares the board with any weapon (Prospector for the armory)."
+    },
+    {
+      "id": "blacksmith",
+      "name": "Blacksmith",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": [
+        "human",
+        "tool"
+      ],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [
+        {
+          "from": "iron-ingot",
+          "to": "sword",
+          "note": "Forges every Iron Ingot on the board into a Sword."
+        }
+      ],
+      "spawnRules": [],
+      "artRef": "assets/symbols/blacksmith.png",
+      "soundRef": "",
+      "devNotes": "Bridges the chains: turns Iron Ingots into Swords (ore -> ingot -> sword -> Knight x2)."
+    },
+    {
+      "id": "pitchfork",
+      "name": "Pitchfork",
+      "rarity": "common",
+      "baseValue": 2,
+      "tags": [
+        "tool",
+        "weapon"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each animal on the board.",
+          "withTag": "animal"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/pitchfork.png",
+      "soundRef": "",
+      "devNotes": "Farmhand's weapon: +1 per animal on the board (counts as tool AND weapon)."
+    },
+    {
+      "id": "red-potion",
+      "name": "Red Potion",
+      "rarity": "common",
+      "baseValue": 2,
+      "tags": [
+        "potion",
+        "treasure"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each potion on the board.",
+          "withTag": "potion"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/red-potion.png",
+      "soundRef": "",
+      "devNotes": "Brew collection: +1 per potion on the board; counts as treasure."
+    },
+    {
+      "id": "green-potion",
+      "name": "Green Potion",
+      "rarity": "common",
+      "baseValue": 2,
+      "tags": [
+        "potion"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 2,
+          "note": "+2 for each adjacent potion.",
+          "withTag": "potion"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/green-potion.png",
+      "soundRef": "",
+      "devNotes": "Bubbles best in a rack: +2 per adjacent potion."
+    },
+    {
+      "id": "blue-potion",
+      "name": "Blue Potion",
+      "rarity": "uncommon",
+      "baseValue": 3,
+      "tags": [
+        "potion"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each potion on the board.",
+          "withTag": "potion"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/blue-potion.png",
+      "soundRef": "",
+      "devNotes": "Higher-value brew: +1 per potion on the board."
+    },
+    {
+      "id": "alchemist",
+      "name": "Alchemist",
+      "rarity": "rare",
+      "baseValue": 2,
+      "tags": [
+        "human",
+        "scaler"
+      ],
+      "synergies": [
+        {
+          "effect": "multiply",
+          "value": 2,
+          "note": "Pays x2 while any potion is on the board.",
+          "withTag": "potion"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/alchemist.png",
+      "soundRef": "",
+      "devNotes": "Potion scaler: doubles when it shares the board with any potion."
+    },
+    {
+      "id": "cargo-ship",
+      "name": "Cargo Ship",
+      "rarity": "rare",
+      "baseValue": 3,
+      "tags": [
+        "vehicle"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 2,
+          "note": "+2 for each treasure on the board.",
+          "withTag": "treasure"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/cargo-ship.png",
+      "soundRef": "",
+      "devNotes": "Big hauler: +2 per treasure on the board."
+    },
+    {
+      "id": "crop-duster",
+      "name": "Crop Duster",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": [
+        "vehicle"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each plant on the board.",
+          "withTag": "plant"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/crop-duster.png",
+      "soundRef": "",
+      "devNotes": "Dusts the whole field: +1 per plant on the board."
+    },
+    {
+      "id": "sheep",
+      "name": "Sheep",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": [
+        "animal"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each animal on the board.",
+          "withTag": "animal"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/sheep.png",
+      "soundRef": "",
+      "devNotes": "Flocks: +1 per animal on the board (cheap herd-builder)."
     }
   ]
 }

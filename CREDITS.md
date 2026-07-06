@@ -35,6 +35,24 @@ Full rationale + rejected tiles in `docs/assets/pack-map.md`._
 | assets/symbols/watering-can.png | [Kenney Tiny Farm](https://kenney.nl/assets/tiny-farm) | CC0 | `tile_0084` — watering can ("Watering Can") |
 | assets/symbols/delivery-truck.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0114` — truck ("Delivery Truck") |
 | assets/symbols/tractor.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0169` — vehicle ("Tractor") |
+| assets/symbols/ruby.png | Original (this repo) | CC0 | recolor of the original gem (red) — frame-free |
+| assets/symbols/emerald.png | Original (this repo) | CC0 | recolor of the original gem (green) — frame-free |
+| assets/symbols/sapphire.png | Original (this repo) | CC0 | recolor of the original gem (blue) — frame-free |
+| assets/symbols/sword.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0104` — sword ("Sword") |
+| assets/symbols/dagger.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0103` — dagger ("Dagger") |
+| assets/symbols/axe.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0131` — axe ("Axe") |
+| assets/symbols/war-hammer.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0117` — war hammer ("War Hammer") |
+| assets/symbols/bow.png | [Kenney Tiny Town](https://kenney.nl/assets/tiny-town) | CC0 | `tile_0118` — bow ("Bow") |
+| assets/symbols/knight.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0106` — soldier ("Knight") |
+| assets/symbols/blacksmith.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0178` — figure ("Blacksmith") |
+| assets/symbols/pitchfork.png | [Kenney Tiny Town](https://kenney.nl/assets/tiny-town) | CC0 | `tile_0116` — pitchfork ("Pitchfork") |
+| assets/symbols/red-potion.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0115` — red potion ("Red Potion") |
+| assets/symbols/green-potion.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0114` — green potion ("Green Potion") |
+| assets/symbols/blue-potion.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0116` — blue potion ("Blue Potion") |
+| assets/symbols/alchemist.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0142` — figure ("Alchemist") |
+| assets/symbols/cargo-ship.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0177` — ship ("Cargo Ship") |
+| assets/symbols/crop-duster.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0172` — plane ("Crop Duster") |
+| assets/symbols/sheep.png | [Kenney Tiny Farm](https://kenney.nl/assets/tiny-farm) | CC0 | `tile_0120` — sheep ("Sheep") |
 
 ## Audio (SFX)
 | soundRef | Source URL | License | Notes |

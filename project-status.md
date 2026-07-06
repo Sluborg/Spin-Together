@@ -89,20 +89,33 @@ Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs li
   (per session). Changing **rarity snaps base value** to that rarity's default
   (`economy.rarityBaseValue`: common 1 · uncommon 2 · rare 3 · very-rare 5 · special 8).
 
-## Content roster (Phase 3) — 20 symbols, themed + combo-linked
+## Content roster (Phase 3) — 38 symbols, themed + combo-linked
 Authored via `scripts/seed_roster.py` (mechanics against the engine vocab; art copied from CC0
-Kenney Tiny tiles). Categories: **food/plants** (carrot, wheat, corn, tomato, mushroom),
-**animals** (hen, cow, pig), **ores/minerals** (iron-ore, iron-ingot, gemstone, gold-nugget),
-**tools** (pickaxe, forge, watering-can), **vehicles** (delivery-truck, tractor), **treasure**
-(copper-coin, treasure-chest), **human** (prospector). New `vehicle` tag added.
+Kenney Tiny tiles, gems are frame-free recolors of the original gem). Tags added: `vehicle`,
+`weapon`, `potion`. Categories:
+- **food/plants:** carrot, wheat, corn, tomato, mushroom
+- **animals:** hen, cow, pig, sheep
+- **ores/minerals + gems:** iron-ore, iron-ingot, gemstone, gold-nugget, ruby, emerald, sapphire
+- **tools:** pickaxe, forge, watering-can (+ blacksmith/axe/pitchfork double as tools)
+- **weapons:** sword, dagger, axe, war-hammer, bow, pitchfork
+- **potions:** red-/green-/blue-potion
+- **vehicles:** delivery-truck, tractor, cargo-ship, crop-duster
+- **humans (scalers):** prospector, knight, alchemist, blacksmith
+- **treasure:** copper-coin, treasure-chest
+
 Signature combos (LBAL/Spincraft-style):
-- **Smelting:** Pickaxe mines Iron Ore (spawn) → Forge transforms Ore→Ingot → Prospector ×2 on
-  minerals → Ingot/Gold count as treasure for Chest/Truck.
-- **Farm:** Watering-Can/Tractor +per adjacent plant · Corn/Tomato +per adjacent plant · Wheat
-  self-seeds · Hen +per adjacent food · Cow +per plant · Pig +per food · Carrot +per animal.
-- **Hoard:** Treasure-Chest +1/treasure · Delivery-Truck +1/treasure · Gold-Nugget/Gemstone.
+- **Smelting → forging:** Pickaxe mines Iron Ore → Forge turns Ore→Ingot → Blacksmith turns
+  Ingot→Sword → Knight ×2 with any weapon; Prospector ×2 on minerals; Ingot/Gold/gems are treasure.
+- **Armory:** Sword/Axe +per weapon · War-Hammer +2/weapon · Dagger +per adjacent weapon ·
+  Bow +per adjacent animal (weapon that hunts the farm) · Knight ×2 with weapon.
+- **Apothecary:** Potions +per (adjacent) potion · Alchemist ×2 with any potion.
+- **Farm:** Watering-Can/Tractor/Corn/Tomato +per adjacent plant · Wheat self-seeds ·
+  Hen +adjacent food · Cow +per plant · Pig +per food · Carrot/Sheep/Pitchfork +per animal ·
+  Crop-Duster +per plant.
+- **Hoard:** Treasure-Chest & Cargo-Ship & Delivery-Truck & Sapphire scale with treasure count.
 - **Gamble:** Mushroom ×2 when a second Mushroom is on the board.
 Balance is first-pass (values sane, not tuned) — `balance-report` is the next tuning pass.
+Note: no sickle/scythe tile exists in these CC0 packs — Pitchfork fills the farm-tool/weapon slot.
 
 ## Content workflow (dev tool → live)
 1. Design in the browser tool (`?dev=1`): browse Kenney art, create/edit symbols (id, name,
