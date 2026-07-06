@@ -17,6 +17,8 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   let sharedSel: number | null = null; // UI-only: selected shared-draft index (null = skip)
   let pendingResult: GameState | null = null; // spun result being shown; player taps Continue to draft
   let infoSym: GameSymbol | null = null; // UI-only: symbol whose info card is open (tap to inspect)
+  let infoAnchor: DOMRect | null = null; // where the info card should point (the tapped element)
+  let invOpen = false; // UI-only: inventory panel open
 
   const BASE = import.meta.env.BASE_URL;
   const sym = (id: string | null): GameSymbol | undefined => (id ? config.symbolsById.get(id) : undefined);
@@ -29,18 +31,21 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     return e;
   }
 
-  // A coin amount: the number with a small copper-coin icon (LBAL-style income clarity).
-  function coinAmt(n: number, cls: string, sign = false): HTMLElement {
+  // A coin amount, LBAL-style: silver coin icon THEN the number (e.g. ●30), vertically centered.
+  // Silver (not the gold copper-coin symbol) so currency never reads as a board piece.
+  function coinAmt(n: number, cls: string): HTMLElement {
     const s = el('span', `coinamt ${cls}`);
-    s.append(el('span', 'coinamt__n', `${sign && n > 0 ? '+' : ''}${n}`));
     const ic = document.createElement('img');
     ic.className = 'coinamt__ic';
-    ic.src = BASE + 'assets/symbols/copper-coin.png';
+    ic.src = BASE + 'assets/ui/coin-silver.png';
     ic.alt = '';
     ic.setAttribute('aria-hidden', 'true');
-    s.append(ic);
+    s.append(ic, el('span', 'coinamt__n', String(n)));
     return s;
   }
+
+  // Only "group/category" tags are surfaced to players; functional tags (spawner/scaler/…) are internal.
+  const VISIBLE_TAGS = new Set(['animal', 'food', 'mineral', 'plant', 'human', 'tool', 'weapon', 'vehicle', 'potion', 'treasure']);
 
   // Human-readable "what it does" lines, from the authored player-facing notes.
   function effectLines(s: GameSymbol): string[] {
@@ -54,18 +59,38 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     return lines;
   }
 
-  function openInfo(s: GameSymbol | undefined): void {
+  function openInfo(s: GameSymbol | undefined, anchor?: HTMLElement): void {
     if (!s) return;
     infoSym = s;
+    infoAnchor = anchor ? anchor.getBoundingClientRect() : null;
     render();
   }
   function closeInfo(): void {
     infoSym = null;
+    infoAnchor = null;
     render();
+  }
+
+  // Place the info card near the tapped element (below if it fits, else above), clamped to viewport.
+  function positionInfo(panel: HTMLElement, rect: DOMRect): void {
+    panel.classList.add('panel--anchored');
+    const pw = panel.offsetWidth;
+    const ph = panel.offsetHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const m = 8;
+    let top = rect.bottom + m;
+    if (top + ph > vh - m) top = rect.top - ph - m; // flip above
+    if (top < m) top = Math.max(m, (vh - ph) / 2); // last resort
+    let left = rect.left + rect.width / 2 - pw / 2;
+    left = Math.max(m, Math.min(left, vw - pw - m));
+    panel.style.left = `${left}px`;
+    panel.style.top = `${top}px`;
   }
 
   // Symbol detail card: icon, name, rarity (with rarity divider), base pay in coins, tags, effects.
   function infoOverlay(s: GameSymbol): HTMLElement {
+    const anchor = infoAnchor;
     const backdrop = el('div', 'overlay overlay--info');
     backdrop.addEventListener('click', (e) => {
       if (e.target === backdrop) closeInfo();
@@ -83,11 +108,15 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     head.append(close);
     panel.append(head);
 
+    // base pay, then (only group) tags to the right of a vertical divider
     const pay = el('div', 'info__pay');
     pay.append(el('span', 'info__paylabel', 'Base pay'), coinAmt(s.baseValue, 'coinamt--info'));
+    const vis = s.tags.filter((t) => VISIBLE_TAGS.has(t));
+    if (vis.length) {
+      pay.append(el('span', 'info__vdiv'));
+      pay.append(el('span', 'info__tags', vis.join(' · ')));
+    }
     panel.append(pay);
-
-    if (s.tags.length) panel.append(el('div', 'info__tags', s.tags.join(' · ')));
 
     const lines = effectLines(s);
     const ul = el('ul', 'info__effects');
@@ -96,6 +125,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     panel.append(ul);
 
     backdrop.append(panel);
+    if (anchor) requestAnimationFrame(() => positionInfo(panel, anchor));
     return backdrop;
   }
 
@@ -131,12 +161,13 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     const pct = Math.max(0, Math.min(100, Math.round((done / total) * 100)));
 
     const wrap = el('header', 'hud');
-    wrap.append(el('div', 'hud__brand', 'Spin-Together'));
-    const bar = el('div', 'hud__bar');
 
-    // Gold — your currency, styled like the payout tags.
-    const gold = el('div', 'gold');
-    gold.append(el('span', 'gold__label', 'GOLD'), coinAmt(view.coffer, 'gold__val'));
+    // Top bar (LBAL-style): inventory on the left, your money (silver coin) on the right.
+    const top = el('div', 'hud__top');
+    const inv = el('button', 'hud__inv', 'Inventory');
+    inv.addEventListener('click', () => { invOpen = true; render(); });
+    top.append(inv, coinAmt(view.coffer, 'money'));
+    wrap.append(top);
 
     // Rent — the goal: how much is due, when, and whether you're covered.
     const rentCard = el('div', 'rent');
@@ -157,9 +188,47 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
       rentCard.append(prog, status);
     }
 
-    bar.append(gold, rentCard);
-    wrap.append(bar);
+    wrap.append(rentCard);
     return wrap;
+  }
+
+  // Inventory: the symbols you own (own + shared pools), with counts; tap one to inspect it.
+  function inventoryOverlay(): HTMLElement {
+    const view = pendingResult ?? state;
+    const backdrop = el('div', 'overlay');
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) { invOpen = false; render(); }
+    });
+    const panel = el('div', 'panel panel--inv');
+    const head = el('div', 'panel__head');
+    head.append(el('span', 'panel__title', 'Inventory'));
+    const close = el('button', 'panel__toggle', 'Close');
+    close.addEventListener('click', () => { invOpen = false; render(); });
+    head.append(close);
+    panel.append(head);
+    panel.append(poolSection('Your pool', view.ownPool));
+    panel.append(poolSection('Shared pool', view.sharedPool));
+    backdrop.append(panel);
+    return backdrop;
+  }
+
+  function poolSection(title: string, pool: readonly string[]): HTMLElement {
+    const sec = el('div', 'inv__sec');
+    sec.append(el('div', 'inv__title', `${title} · ${pool.length}`));
+    const counts = new Map<string, number>();
+    for (const id of pool) counts.set(id, (counts.get(id) ?? 0) + 1);
+    const grid = el('div', 'inv__grid');
+    for (const [id, n] of counts) {
+      const cell = el('button', 'inv__cell');
+      cell.append(glyphNode(sym(id), 'in-cell'));
+      if (n > 1) cell.append(el('span', 'inv__count', `×${n}`));
+      cell.append(el('span', 'inv__name', nameOf(id)));
+      cell.addEventListener('click', (e) => openInfo(sym(id), e.currentTarget as HTMLElement));
+      grid.append(cell);
+    }
+    if (counts.size === 0) sec.append(el('div', 'inv__empty', '—'));
+    sec.append(grid);
+    return sec;
   }
 
   // Render the current board (state.cols × state.rows) as a slot-machine cabinet of vertical reels.
@@ -183,9 +252,9 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
         if (placed && placed.symbolId) {
           const cellSym = sym(placed.symbolId);
           slot.append(glyphNode(cellSym, 'in-cell'));
-          if (placed.payout > 0) slot.append(coinAmt(placed.payout, 'slot__pay', true));
+          if (placed.payout > 0) slot.append(coinAmt(placed.payout, 'slot__pay'));
           slot.classList.add('slot--tappable');
-          slot.addEventListener('click', () => openInfo(cellSym)); // tap a symbol → what it does
+          slot.addEventListener('click', (e) => openInfo(cellSym, e.currentTarget as HTMLElement)); // tap a symbol → what it does
         } else {
           slot.append(el('span', 'slot__dot'));
         }
@@ -210,7 +279,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     info.title = 'What does this do?';
     info.addEventListener('click', (e) => {
       e.stopPropagation();
-      openInfo(s);
+      openInfo(s, c);
     });
     c.append(info);
     c.append(glyphNode(s, 'in-card'));
@@ -289,7 +358,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
       const paid = pendingResult.lastSpin?.total ?? 0;
       const prompt = el('p', 'actions__prompt');
       if (paid > 0) {
-        prompt.append(el('span', undefined, 'Spin paid '), coinAmt(paid, 'coinamt--prompt', true));
+        prompt.append(el('span', undefined, 'Spin paid '), coinAmt(paid, 'coinamt--prompt'));
       } else {
         prompt.textContent = 'No payout this spin';
       }
@@ -364,7 +433,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
       slot.classList.toggle('slot--rolling', rolling);
       if (id) {
         slot.appendChild(glyphNode(sym(id), 'in-cell'));
-        if (!rolling && payout > 0) slot.appendChild(coinAmt(payout, 'slot__pay', true));
+        if (!rolling && payout > 0) slot.appendChild(coinAmt(payout, 'slot__pay'));
       } else {
         slot.appendChild(el('span', 'slot__dot'));
       }
@@ -411,6 +480,7 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     root.append(hud(), boardArea());
     const a = actions();
     if (a) root.append(a); // overlay/pill are position:fixed; inline sections flow normally
+    if (invOpen) root.append(inventoryOverlay());
     if (infoSym) root.append(infoOverlay(infoSym)); // symbol detail card, above everything
   }
 

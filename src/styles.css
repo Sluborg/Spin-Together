@@ -37,47 +37,43 @@ body {
   margin-inline: auto;
 }
 
-/* HUD */
-.hud__brand {
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-
-/* Two focal readouts: GOLD you have, RENT you owe (with countdown + covered status). */
-.hud__bar {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px;
-  align-items: stretch;
-}
-
-.gold {
+/* HUD — a light top bar (Inventory + money), then the rent readout. Deliberately understated so
+   it doesn't dominate the board (LBAL keeps the chrome quiet). */
+.hud {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+.hud__top {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: 88px;
+  justify-content: space-between;
+  gap: 10px;
+}
+.hud__inv {
+  appearance: none;
+  background: var(--panel);
+  border: 1px solid var(--cell-edge);
+  color: var(--text);
+  border-radius: 10px;
   padding: 8px 14px;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #ffd257, #eaa42c);
-  border: 1px solid #7a4d13;
-  color: #3a2405;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  min-height: 40px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
 }
-.gold__label {
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  opacity: 0.82;
+.hud__inv:hover {
+  border-color: var(--muted);
 }
-.gold__val {
-  font-size: 1.6rem;
+/* current money — a compact chip, not a big gold block */
+.money {
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--cell-edge);
+  font-size: 1.15rem;
   font-weight: 900;
-  line-height: 1.05;
+  color: var(--text);
 }
 
 .rent {
@@ -124,7 +120,7 @@ body {
 .rent__track > i {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #ffcf5c, #ff8f5c);
+  background: linear-gradient(90deg, #4d8fe0, #5bc6d0); /* cool — distinct from gold/coins */
 }
 .rent__spins {
   font-size: 0.6rem;
@@ -922,30 +918,34 @@ body {
   transform: translate(-50%, 0);
 }
 
-/* ---- Income shown as coins (LBAL-style clarity) ---- */
+/* ---- Income shown as coins (LBAL-style: silver coin THEN number, e.g. ●30) ---- */
 .coinamt {
   display: inline-flex;
-  align-items: center;
+  align-items: center; /* vertical middle — icon and number always centered */
   gap: 3px;
+  line-height: 1;
 }
 .coinamt__ic {
-  width: 0.85em;
-  height: 0.85em;
+  width: 1em;
+  height: 1em;
   image-rendering: pixelated;
   display: block;
   flex: 0 0 auto;
 }
-.gold__val .coinamt__ic {
-  width: 1.1rem;
-  height: 1.1rem;
+.coinamt__n {
+  line-height: 1;
+}
+.money .coinamt__ic {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 .slot__pay .coinamt__ic {
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
 }
 .coinamt--prompt {
   font-weight: 800;
-  color: #ffd257;
+  color: var(--text);
 }
 
 /* ---- Rarity divider line under the rarity label (LBAL-style) ---- */
@@ -990,12 +990,22 @@ body {
   cursor: pointer;
 }
 
-/* ---- Symbol info card ---- */
+/* ---- Symbol info card (anchored near the tapped symbol, tooltip-style — no dim) ---- */
 .overlay--info {
   z-index: 60;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  align-items: flex-start; /* card is absolutely placed; don't center it */
 }
 .panel--info {
   max-width: min(92vw, 340px);
+}
+.panel--anchored {
+  position: fixed;
+  width: auto;
+  max-width: min(92vw, 340px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
 }
 .info__head {
   display: flex;
@@ -1026,7 +1036,8 @@ body {
 .info__pay {
   display: flex;
   align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 8px 10px;
   margin-top: 12px;
 }
 .info__paylabel {
@@ -1039,9 +1050,14 @@ body {
   font-size: 1.05rem;
   font-weight: 800;
 }
+.info__vdiv {
+  width: 1px;
+  align-self: stretch;
+  min-height: 16px;
+  background: var(--cell-edge);
+}
 .info__tags {
-  margin-top: 8px;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   color: var(--muted);
   font-family: ui-monospace, monospace;
 }
@@ -1059,5 +1075,66 @@ body {
 .info__effect--none {
   list-style: none;
   margin-left: -18px;
+  color: var(--muted);
+}
+
+/* ---- Inventory panel: symbols you own (own + shared pools) ---- */
+.panel--inv {
+  max-width: min(94vw, 460px);
+  max-height: 88vh;
+  overflow-y: auto;
+}
+.inv__sec {
+  margin-top: 12px;
+}
+.inv__title {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.inv__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 8px;
+}
+.inv__cell {
+  position: relative;
+  appearance: none;
+  background: var(--cell);
+  border: 1px solid var(--cell-edge);
+  border-radius: 10px;
+  padding: 8px 4px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.inv__cell .sym-img,
+.inv__cell .sym-glyph {
+  width: 40px;
+  height: 40px;
+  font-size: 1.6rem;
+}
+.inv__count {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 6px;
+  padding: 0 4px;
+}
+.inv__name {
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.1;
+}
+.inv__empty {
   color: var(--muted);
 }

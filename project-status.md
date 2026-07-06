@@ -33,8 +33,18 @@ win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless pla
 - **Symbol info card:** tap any placed symbol (or a draft card's "i") → a detail card with icon,
   name, rarity (+ divider), base pay (in coins), tags, and plain-English effects (from the
   authored notes). Draft cards gained a rarity **divider line** (LBAL-style) under the label.
-- **Income as coins:** per-slot payout, GOLD total, and "Spin paid" now show a small coin icon
-  next to the number (LBAL-style clarity). Buttons de-iconed (Continue / Hide / Show picks / Close).
+- **Income as coins (LBAL match):** silver **coin-then-number** (●30, no "+"), vertically centered,
+  on per-slot payout, money, "Spin paid", and base pay. A **silver** currency coin
+  (`assets/ui/coin-silver.png`) — distinct from the gold copper-coin *symbol* so money never reads
+  as a board piece. Buttons de-iconed (Continue / Hide / Show picks / Close).
+- **HUD slimmed (less dominant):** dropped the big gold block for a light top bar — an **Inventory**
+  button + a compact money chip — over the rent readout; rent progress bar recolored **cool blue**
+  (was gold, too close to the money color).
+- **Inventory panel:** the Inventory button opens your owned symbols (own + shared pools, with
+  counts); tap any to inspect.
+- **Info card refinements:** anchored **near the tapped symbol** (not a centered modal); base pay as
+  ●N; only **group** tags shown (animal/food/… — functional tags like spawner/scaler hidden), placed
+  right of base pay after a vertical divider.
 - **Sprites: frame-free 16px pixel** (Tiny-style). Kenney Tiny Farm for farmer/hen/carrot;
   coin + gem are **original CC0 pixel art** (Kenney's Tiny *item* tiles carry an inventory-slot
   frame — the "thick brown border" — so they're avoided). Crisp via `image-rendering: pixelated`.
