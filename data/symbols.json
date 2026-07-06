@@ -15,60 +15,142 @@
       "transforms": [],
       "spawnRules": [],
       "artRef": "assets/symbols/copper-coin.png",
-      "soundRef": "assets/sfx/coin.ogg",
-      "devNotes": "Baseline treasure filler (anchors EV). Art: original CC0 pixel coin (Tiny style)."
+      "soundRef": "",
+      "devNotes": "Baseline treasure filler that anchors EV. Original CC0 pixel coin."
     },
     {
-      "id": "field-mouse",
-      "name": "Barn Hen",
-      "rarity": "common",
-      "baseValue": 1,
+      "id": "gold-nugget",
+      "name": "Gold Nugget",
+      "rarity": "uncommon",
+      "baseValue": 4,
       "tags": [
-        "animal"
+        "treasure",
+        "mineral"
+      ],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/gold-nugget.png",
+      "soundRef": "",
+      "devNotes": "High-value treasure that also counts as a mineral (feeds Prospector, chest, truck)."
+    },
+    {
+      "id": "gemstone",
+      "name": "Gemstone",
+      "rarity": "uncommon",
+      "baseValue": 3,
+      "tags": [
+        "mineral",
+        "treasure"
+      ],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/gemstone.png",
+      "soundRef": "",
+      "devNotes": "Shiny mineral payload; doubles under Prospector and counts as treasure. Original CC0 pixel gem (frameless)."
+    },
+    {
+      "id": "treasure-chest",
+      "name": "Treasure Chest",
+      "rarity": "rare",
+      "baseValue": 3,
+      "tags": [
+        "treasure"
       ],
       "synergies": [
         {
-          "withTag": "food",
-          "effect": "addPerAdjacent",
-          "value": 2,
-          "note": "+2 for each adjacent food symbol."
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each other treasure on the board.",
+          "withTag": "treasure"
         }
       ],
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/field-mouse.png",
-      "soundRef": "assets/sfx/squeak.ogg",
-      "devNotes": "Cheap animal that pecks adjacent food (self-buff). Name matched to available CC0 art (Kenney Tiny Farm hen); id kept stable. Mechanics unchanged."
+      "artRef": "assets/symbols/treasure-chest.png",
+      "soundRef": "",
+      "devNotes": "Hoard scaler: rewards treasure-heavy boards (+1 per other treasure)."
     },
     {
-      "id": "wheat-sheaf",
-      "name": "Carrot",
+      "id": "iron-ore",
+      "name": "Iron Ore",
       "rarity": "common",
       "baseValue": 1,
       "tags": [
-        "food"
+        "mineral"
       ],
-      "synergies": [
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/iron-ore.png",
+      "soundRef": "",
+      "devNotes": "Cheap mineral (raw rock). Forge upgrades it to an Ingot; Prospector doubles while it is out."
+    },
+    {
+      "id": "iron-ingot",
+      "name": "Iron Ingot",
+      "rarity": "uncommon",
+      "baseValue": 4,
+      "tags": [
+        "mineral",
+        "treasure"
+      ],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/iron-ingot.png",
+      "soundRef": "",
+      "devNotes": "Smelted upgrade of Iron Ore (produced by the Forge). Valuable mineral + treasure."
+    },
+    {
+      "id": "forge",
+      "name": "Forge",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": [
+        "tool"
+      ],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [
         {
-          "withTag": "animal",
-          "effect": "add",
-          "value": 1,
-          "note": "+1 for each animal on the board."
+          "from": "iron-ore",
+          "to": "iron-ingot",
+          "note": "Smelts every Iron Ore on the board into an Iron Ingot."
         }
       ],
+      "spawnRules": [],
+      "artRef": "assets/symbols/forge.png",
+      "soundRef": "",
+      "devNotes": "Turns every Iron Ore into an Iron Ingot before payout — the core smelting combo."
+    },
+    {
+      "id": "pickaxe",
+      "name": "Pickaxe",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": [
+        "tool"
+      ],
+      "synergies": [],
       "destroys": [],
       "transforms": [],
       "spawnRules": [
         {
-          "spawns": "wheat-sheaf",
-          "chance": 0.05,
-          "note": "Occasionally propagates another sheaf into the shared pool."
+          "spawns": "iron-ore",
+          "chance": 0.25,
+          "note": "25% to mine an Iron Ore into an empty cell."
         }
       ],
-      "artRef": "assets/symbols/wheat-sheaf.png",
-      "soundRef": "assets/sfx/rustle.ogg",
-      "devNotes": "Food backbone; light spawner. Art: Kenney Tiny Farm carrot (CC0). Mechanics unchanged."
+      "artRef": "assets/symbols/pickaxe.png",
+      "soundRef": "",
+      "devNotes": "Mines: 25% each spin to drop an Iron Ore into an empty cell (feeds Forge/Prospector)."
     },
     {
       "id": "prospector",
@@ -81,34 +163,279 @@
       ],
       "synergies": [
         {
-          "withTag": "mineral",
           "effect": "multiply",
           "value": 2,
-          "note": "Pays ×2 while any mineral is on the board."
+          "note": "Pays x2 while any mineral is on the board.",
+          "withTag": "mineral"
         }
       ],
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
       "artRef": "assets/symbols/prospector.png",
-      "soundRef": "assets/sfx/pickaxe.ogg",
-      "devNotes": "Scaler that pays double when it shares the board with a mineral. Multiply resolves after adds (self-buff model)."
+      "soundRef": "",
+      "devNotes": "Scaler that pays double when it shares the board with any mineral."
     },
     {
-      "id": "raw-ore",
-      "name": "Gemstone",
-      "rarity": "uncommon",
-      "baseValue": 2,
+      "id": "carrot",
+      "name": "Carrot",
+      "rarity": "common",
+      "baseValue": 1,
       "tags": [
-        "mineral"
+        "food",
+        "plant"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each animal on the board.",
+          "withTag": "animal"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/carrot.png",
+      "soundRef": "",
+      "devNotes": "Food backbone; +1 per animal (feed the livestock)."
+    },
+    {
+      "id": "wheat",
+      "name": "Wheat",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": [
+        "food",
+        "plant",
+        "spawner"
       ],
       "synergies": [],
       "destroys": [],
       "transforms": [],
+      "spawnRules": [
+        {
+          "spawns": "wheat",
+          "chance": 0.12,
+          "note": "12% to re-seed another Wheat into an empty cell."
+        }
+      ],
+      "artRef": "assets/symbols/wheat.png",
+      "soundRef": "",
+      "devNotes": "Self-seeding crop: sometimes sows another Wheat into an empty cell."
+    },
+    {
+      "id": "corn",
+      "name": "Corn",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": [
+        "food",
+        "plant"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 1,
+          "note": "+1 for each adjacent plant.",
+          "withTag": "plant"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/raw-ore.png",
-      "soundRef": "assets/sfx/clink.ogg",
-      "devNotes": "Mineral payload for Prospector (×2 scaler target). Art: original CC0 pixel gem (Tiny style)."
+      "artRef": "assets/symbols/corn.png",
+      "soundRef": "",
+      "devNotes": "Row crop: +1 per adjacent plant (plant it in a patch)."
+    },
+    {
+      "id": "tomato",
+      "name": "Tomato",
+      "rarity": "common",
+      "baseValue": 2,
+      "tags": [
+        "food",
+        "plant"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 1,
+          "note": "+1 for each adjacent plant.",
+          "withTag": "plant"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/tomato.png",
+      "soundRef": "",
+      "devNotes": "Juicy crop worth a bit more; +1 per adjacent plant."
+    },
+    {
+      "id": "mushroom",
+      "name": "Mushroom",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": [
+        "food",
+        "plant",
+        "gambler"
+      ],
+      "synergies": [
+        {
+          "effect": "multiply",
+          "value": 2,
+          "note": "x2 while another Mushroom shares the board.",
+          "withId": "mushroom"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/mushroom.png",
+      "soundRef": "",
+      "devNotes": "Spore bloom: x2 when a second Mushroom is on the board (collect them)."
+    },
+    {
+      "id": "hen",
+      "name": "Hen",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": [
+        "animal",
+        "spawner"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 2,
+          "note": "+2 for each adjacent food.",
+          "withTag": "food"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/hen.png",
+      "soundRef": "",
+      "devNotes": "Pecks adjacent food for +2 each; cheap animal to trigger Carrot/Pig."
+    },
+    {
+      "id": "cow",
+      "name": "Cow",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": [
+        "animal"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each plant on the board.",
+          "withTag": "plant"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/cow.png",
+      "soundRef": "",
+      "devNotes": "Grazer: +1 per plant on the board (loves a big farm)."
+    },
+    {
+      "id": "pig",
+      "name": "Pig",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": [
+        "animal"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each food on the board.",
+          "withTag": "food"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/pig.png",
+      "soundRef": "",
+      "devNotes": "Eats scraps: +1 per food on the board."
+    },
+    {
+      "id": "watering-can",
+      "name": "Watering Can",
+      "rarity": "common",
+      "baseValue": 1,
+      "tags": [
+        "tool"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 2,
+          "note": "+2 for each adjacent plant.",
+          "withTag": "plant"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/watering-can.png",
+      "soundRef": "",
+      "devNotes": "Tends the garden: +2 per adjacent plant (park it between crops)."
+    },
+    {
+      "id": "delivery-truck",
+      "name": "Delivery Truck",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": [
+        "vehicle"
+      ],
+      "synergies": [
+        {
+          "effect": "add",
+          "value": 1,
+          "note": "+1 for each treasure on the board.",
+          "withTag": "treasure"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/delivery-truck.png",
+      "soundRef": "",
+      "devNotes": "Hauls loot: +1 per treasure on the board (pairs with chest/coins)."
+    },
+    {
+      "id": "tractor",
+      "name": "Tractor",
+      "rarity": "uncommon",
+      "baseValue": 3,
+      "tags": [
+        "vehicle",
+        "tool"
+      ],
+      "synergies": [
+        {
+          "effect": "addPerAdjacent",
+          "value": 2,
+          "note": "+2 for each adjacent plant.",
+          "withTag": "plant"
+        }
+      ],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/tractor.png",
+      "soundRef": "",
+      "devNotes": "Harvests: +2 per adjacent crop (plant) — a mobile Watering Can."
     }
   ]
 }

@@ -41,7 +41,7 @@
     "rarityWeights": { "common": 60, "uncommon": 25, "rare": 11, "very-rare": 3, "special": 1 }
   },
   "starter": {
-    "own": ["copper-coin", "copper-coin", "field-mouse", "wheat-sheaf"],
+    "own": ["copper-coin", "copper-coin", "carrot", "hen"],
     "shared": ["copper-coin", "copper-coin"]
   }
 }

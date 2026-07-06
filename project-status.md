@@ -89,6 +89,21 @@ Prior: **Phase 1 (Scaffold)** — toolchain, CI, dual-branch Pages, both URLs li
   (per session). Changing **rarity snaps base value** to that rarity's default
   (`economy.rarityBaseValue`: common 1 · uncommon 2 · rare 3 · very-rare 5 · special 8).
 
+## Content roster (Phase 3) — 20 symbols, themed + combo-linked
+Authored via `scripts/seed_roster.py` (mechanics against the engine vocab; art copied from CC0
+Kenney Tiny tiles). Categories: **food/plants** (carrot, wheat, corn, tomato, mushroom),
+**animals** (hen, cow, pig), **ores/minerals** (iron-ore, iron-ingot, gemstone, gold-nugget),
+**tools** (pickaxe, forge, watering-can), **vehicles** (delivery-truck, tractor), **treasure**
+(copper-coin, treasure-chest), **human** (prospector). New `vehicle` tag added.
+Signature combos (LBAL/Spincraft-style):
+- **Smelting:** Pickaxe mines Iron Ore (spawn) → Forge transforms Ore→Ingot → Prospector ×2 on
+  minerals → Ingot/Gold count as treasure for Chest/Truck.
+- **Farm:** Watering-Can/Tractor +per adjacent plant · Corn/Tomato +per adjacent plant · Wheat
+  self-seeds · Hen +per adjacent food · Cow +per plant · Pig +per food · Carrot +per animal.
+- **Hoard:** Treasure-Chest +1/treasure · Delivery-Truck +1/treasure · Gold-Nugget/Gemstone.
+- **Gamble:** Mushroom ×2 when a second Mushroom is on the board.
+Balance is first-pass (values sane, not tuned) — `balance-report` is the next tuning pass.
+
 ## Content workflow (dev tool → live)
 1. Design in the browser tool (`?dev=1`): browse Kenney art, create/edit symbols (id, name,
    rarity, baseValue, tags, art, **notes** = shorthand mechanic to code), **Export symbol set JSON**.

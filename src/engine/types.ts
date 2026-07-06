@@ -11,6 +11,7 @@ export const TAGS = [
   'plant',
   'human',
   'tool',
+  'vehicle',
   'treasure',
   'destroyer',
   'scaler',

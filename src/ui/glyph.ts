@@ -4,10 +4,25 @@ import type { Symbol as GameSymbol } from '../engine/types';
 
 const BY_ID: Record<string, string> = {
   'copper-coin': '🪙',
-  'field-mouse': '🐔',
-  'wheat-sheaf': '🥕',
+  'gold-nugget': '💰',
+  gemstone: '💎',
+  'treasure-chest': '🧰',
+  'iron-ore': '🪨',
+  'iron-ingot': '🧱',
+  forge: '🔥',
+  pickaxe: '⛏️',
   prospector: '🧑‍🌾',
-  'raw-ore': '💎',
+  carrot: '🥕',
+  wheat: '🌾',
+  corn: '🌽',
+  tomato: '🍅',
+  mushroom: '🍄',
+  hen: '🐔',
+  cow: '🐄',
+  pig: '🐖',
+  'watering-can': '🪣',
+  'delivery-truck': '🚚',
+  tractor: '🚜',
 };
 
 const BY_TAG: Record<string, string> = {
@@ -18,6 +33,7 @@ const BY_TAG: Record<string, string> = {
   mineral: '💎',
   human: '🧑',
   tool: '🔧',
+  vehicle: '🚚',
   destroyer: '💥',
   scaler: '✖️',
   spawner: '🌀',
