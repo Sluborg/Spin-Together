@@ -21,16 +21,19 @@ from PIL import Image
 SYMS = "data/symbols.json"
 DEV_ASSETS = "public/dev-assets"
 SPRITES = "public/assets/symbols"
-CANVAS, CONTENT = 128, 0.80
+CANVAS = 128
+SCALE = 6  # fixed native-pixel scale => uniform outline weight (see scripts/seed_roster.py)
 
 
 def normalize(src: str, dst: str) -> None:
-    """Crop to content, nearest-neighbour upscale to ~80% of a 128px square, pad transparent."""
+    """Crop to content, nearest-neighbour upscale by a FIXED ×6 (uniform outline), pad to 128px."""
     im = Image.open(src).convert("RGBA")
     bb = im.getbbox()
     if bb:
         im = im.crop(bb)
-    scale = max(int((CANVAS * CONTENT) // max(im.width, im.height)), 1)
+    scale = SCALE
+    while scale > 1 and (im.width * scale > CANVAS or im.height * scale > CANVAS):
+        scale -= 1
     im = im.resize((im.width * scale, im.height * scale), Image.NEAREST)
     out = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
     out.alpha_composite(im, ((CANVAS - im.width) // 2, (CANVAS - im.height) // 2))

@@ -14,7 +14,11 @@ from PIL import Image
 SYMS = "data/symbols.json"
 DEV = "public/dev-assets"
 SPRITES = "public/assets/symbols"
-CANVAS, CONTENT = 128, 0.80
+CANVAS = 128
+# FIXED native-pixel scale so every sprite has the SAME outline weight (Kenney "Tiny" tiles are
+# 16px native with a 1px outline; the original coin/gem/prospector are also authored at ×6). A
+# uniform ×6 => 1 native pixel = 6 screen pixels everywhere; icons vary in size, outlines match.
+SCALE = 6
 
 
 def norm(src, dst):
@@ -22,7 +26,9 @@ def norm(src, dst):
     bb = im.getbbox()
     if bb:
         im = im.crop(bb)
-    scale = max(int((CANVAS * CONTENT) // max(im.width, im.height)), 1)
+    scale = SCALE
+    while scale > 1 and (im.width * scale > CANVAS or im.height * scale > CANVAS):
+        scale -= 1  # safety clamp for any oversized tile (16px tiles never trip this at ×6)
     im = im.resize((im.width * scale, im.height * scale), Image.NEAREST)
     out = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
     out.alpha_composite(im, ((CANVAS - im.width) // 2, (CANVAS - im.height) // 2))

@@ -26,7 +26,15 @@ win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless pla
 - **Rarity coloring:** draft cards tint border + label by rarity (common grey · uncommon green ·
   rare blue · very-rare purple · special orange). Spin button de-iconed ("Spin"). Removed the
   event-log footer (the single "Spin paid" line covers it).
-- **Deferred:** normalizing per-sprite outline weights (no clean fix-by-rule; would be per-sprite).
+- **Sprite outlines normalized (fix-by-rule):** all sprites now upscale at a **fixed ×6** native
+  scale (Kenney Tiny = 16px/1px-outline; coin/gem/prospector authored at ×6), so every icon shares
+  the same outline weight (icons vary in size, borders match). In `scripts/seed_roster.py` +
+  `scripts/apply-symbol-set.py`.
+- **Symbol info card:** tap any placed symbol (or a draft card's "i") → a detail card with icon,
+  name, rarity (+ divider), base pay (in coins), tags, and plain-English effects (from the
+  authored notes). Draft cards gained a rarity **divider line** (LBAL-style) under the label.
+- **Income as coins:** per-slot payout, GOLD total, and "Spin paid" now show a small coin icon
+  next to the number (LBAL-style clarity). Buttons de-iconed (Continue / Hide / Show picks / Close).
 - **Sprites: frame-free 16px pixel** (Tiny-style). Kenney Tiny Farm for farmer/hen/carrot;
   coin + gem are **original CC0 pixel art** (Kenney's Tiny *item* tiles carry an inventory-slot
   frame — the "thick brown border" — so they're avoided). Crisp via `image-rendering: pixelated`.
