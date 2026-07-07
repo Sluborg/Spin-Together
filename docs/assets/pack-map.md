@@ -22,7 +22,7 @@ keep faint corner pixels but read cleanly.
 ## Per-symbol mapping (id → tag → name → source → tile)
 | Symbol id | Tag(s) | Name | Source | Tile |
 |-----------|--------|------|--------|------|
-| copper-coin | treasure | Copper Coin | original | authored 16px coin |
+| silver-coin | treasure | Silver Coin | original | authored 16px coin (silver) |
 | gemstone | mineral, treasure | Gemstone | original | authored 16px gem |
 | gold-nugget | treasure, mineral | Gold Nugget | Tiny Dungeon | `tile_0120` |
 | treasure-chest | treasure | Treasure Chest | Tiny Dungeon | `tile_0089` |

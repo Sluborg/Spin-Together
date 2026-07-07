@@ -15,7 +15,7 @@ Full rationale + rejected tiles in `docs/assets/pack-map.md`._
 
 | artRef | Source | License | Notes |
 |--------|--------|---------|-------|
-| assets/symbols/copper-coin.png | Original (this repo) | CC0 | 16px pixel coin ("Copper Coin") — Tiny-style, frame-free |
+| assets/symbols/silver-coin.png | Original (this repo) | CC0 | 16px pixel coin ("Silver Coin") — Tiny-style, frame-free (silver; distinct from the gold money icon) |
 | assets/symbols/gemstone.png | Original (this repo) | CC0 | 16px pixel gem ("Gemstone") — Tiny-style, frame-free |
 | assets/symbols/gold-nugget.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0120` — gold cluster ("Gold Nugget") |
 | assets/symbols/treasure-chest.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0089` — chest ("Treasure Chest") |
@@ -62,4 +62,4 @@ Full rationale + rejected tiles in `docs/assets/pack-map.md`._
 ## UI / other
 | asset | Source URL | License | Notes |
 |-------|-----------|---------|-------|
-| _(none yet)_ | | | |
+| assets/ui/coin-gold.png | Original (this repo) | CC0 | gold currency/income coin icon (money shown as ●N) |

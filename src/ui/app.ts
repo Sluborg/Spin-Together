@@ -31,13 +31,13 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     return e;
   }
 
-  // A coin amount, LBAL-style: silver coin icon THEN the number (e.g. ●30), vertically centered.
-  // Silver (not the gold copper-coin symbol) so currency never reads as a board piece.
+  // A coin amount, LBAL-style: GOLD coin icon THEN the number (e.g. ●30), vertically centered.
+  // Money is gold; the board's coin symbol is silver, so currency never reads as a board piece.
   function coinAmt(n: number, cls: string): HTMLElement {
     const s = el('span', `coinamt ${cls}`);
     const ic = document.createElement('img');
     ic.className = 'coinamt__ic';
-    ic.src = BASE + 'assets/ui/coin-silver.png';
+    ic.src = BASE + 'assets/ui/coin-gold.png';
     ic.alt = '';
     ic.setAttribute('aria-hidden', 'true');
     s.append(ic, el('span', 'coinamt__n', String(n)));

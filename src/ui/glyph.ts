@@ -3,7 +3,7 @@
 import type { Symbol as GameSymbol } from '../engine/types';
 
 const BY_ID: Record<string, string> = {
-  'copper-coin': '🪙',
+  'silver-coin': '🪙',
   'gold-nugget': '💰',
   gemstone: '💎',
   'treasure-chest': '🧰',

@@ -3,8 +3,8 @@
   "note": "Seed symbols to validate the schema. Full content pipeline fills this in later phases. Effects vocabulary: add, multiply, addPerAdjacent, destroy, transform, spawn. Every synergy references a tag or an id.",
   "symbols": [
     {
-      "id": "copper-coin",
-      "name": "Copper Coin",
+      "id": "silver-coin",
+      "name": "Silver Coin",
       "rarity": "common",
       "baseValue": 1,
       "tags": [
@@ -14,9 +14,9 @@
       "destroys": [],
       "transforms": [],
       "spawnRules": [],
-      "artRef": "assets/symbols/copper-coin.png",
+      "artRef": "assets/symbols/silver-coin.png",
       "soundRef": "",
-      "devNotes": "Baseline treasure filler that anchors EV. Original CC0 pixel coin."
+      "devNotes": "Baseline treasure filler that anchors EV. Original CC0 pixel coin (silver — distinct from the gold money icon)."
     },
     {
       "id": "gold-nugget",

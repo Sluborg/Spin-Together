@@ -33,10 +33,10 @@ win/lose. Pure engine, 31 unit tests green, verified end-to-end via headless pla
 - **Symbol info card:** tap any placed symbol (or a draft card's "i") → a detail card with icon,
   name, rarity (+ divider), base pay (in coins), tags, and plain-English effects (from the
   authored notes). Draft cards gained a rarity **divider line** (LBAL-style) under the label.
-- **Income as coins (LBAL match):** silver **coin-then-number** (●30, no "+"), vertically centered,
-  on per-slot payout, money, "Spin paid", and base pay. A **silver** currency coin
-  (`assets/ui/coin-silver.png`) — distinct from the gold copper-coin *symbol* so money never reads
-  as a board piece. Buttons de-iconed (Continue / Hide / Show picks / Close).
+- **Income as coins (LBAL match):** **gold coin-then-number** (●30, no "+"), vertically centered,
+  on per-slot payout, money, "Spin paid", and base pay. **Money = gold** (`assets/ui/coin-gold.png`);
+  the board **coin symbol is silver** ("Silver Coin", `silver-coin`) so currency never reads as a
+  board piece. Payout tags are dark chips so the gold coin pops. Buttons de-iconed.
 - **HUD slimmed (less dominant):** dropped the big gold block for a light top bar — an **Inventory**
   button + a compact money chip — over the rent readout; rent progress bar recolored **cool blue**
   (was gold, too close to the money color).

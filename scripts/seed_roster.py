@@ -57,8 +57,8 @@ def syn(effect, value, tag=None, sid=None, note=""):
 
 # id, name, rarity, base, tags, synergies, transforms, spawnRules, art(tile or None=keep existing), notes
 R = [
-    ("copper-coin", "Copper Coin", "common", 1, ["treasure"], [], [], [], None,
-     "Baseline treasure filler that anchors EV. Original CC0 pixel coin."),
+    ("silver-coin", "Silver Coin", "common", 1, ["treasure"], [], [], [], None,
+     "Baseline treasure filler that anchors EV. Original CC0 pixel coin (silver — distinct from the gold money icon)."),
     ("gold-nugget", "Gold Nugget", "uncommon", 4, ["treasure", "mineral"], [], [], [], "tiny-dungeon/tile_0120",
      "High-value treasure that also counts as a mineral (feeds Prospector, chest, truck)."),
     ("gemstone", "Gemstone", "uncommon", 3, ["mineral", "treasure"], [], [], [], None,
