@@ -922,7 +922,7 @@ body {
 .coinamt {
   display: inline-flex;
   align-items: center; /* vertical middle — icon and number always centered */
-  gap: 3px;
+  gap: 0.1em; /* tight (●2, not ● 2); scales with font size */
   line-height: 1;
 }
 .coinamt__ic {
