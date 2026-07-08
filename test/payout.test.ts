@@ -122,6 +122,28 @@ describe('payout engine — canonical order', () => {
     expect(r.total).toBe(3);
   });
 
+  it('delivery: hauler moves adjacent producer value to an adjacent consumer', () => {
+    const m = mapOf(
+      sym({ id: 'ore', baseValue: 1, tags: ['mineral'] }),
+      sym({ id: 'truck', baseValue: 0, delivery: { from: 'mineral', to: 'depot', value: 2 } }),
+      sym({ id: 'depot', baseValue: 1 }),
+    );
+    // ore → truck → depot in a row: truck is adjacent to both
+    const r = resolveSpin(board(['ore', 'truck', 'depot']), 3, 1, m, rng());
+    expect(r.cells[2].payout).toBe(3); // depot base 1 + 2×ore.baseValue(1)
+    expect(r.total).toBe(4); // ore 1 + truck 0 + depot 3
+  });
+
+  it('delivery: no consumer adjacent → no bonus', () => {
+    const m = mapOf(
+      sym({ id: 'ore', baseValue: 1, tags: ['mineral'] }),
+      sym({ id: 'truck', baseValue: 0, delivery: { from: 'mineral', to: 'depot', value: 2 } }),
+      sym({ id: 'depot', baseValue: 1 }),
+    );
+    const r = resolveSpin(board(['ore', 'truck', null]), 3, 1, m, rng());
+    expect(r.total).toBe(1); // ore only; nothing delivered
+  });
+
   it('degenerate: spawn on a full board is dropped', () => {
     const m = mapOf(sym({ id: 's', baseValue: 1, spawnRules: [{ spawns: 's', chance: 1 }] }));
     const r = resolveSpin(board(['s']), 1, 1, m, rng());

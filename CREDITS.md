@@ -53,6 +53,8 @@ Full rationale + rejected tiles in `docs/assets/pack-map.md`._
 | assets/symbols/cargo-ship.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0177` — ship ("Cargo Ship") |
 | assets/symbols/crop-duster.png | [Kenney Tiny Battle](https://kenney.nl/assets/tiny-battle) | CC0 | `tile_0172` — plane ("Crop Duster") |
 | assets/symbols/sheep.png | [Kenney Tiny Farm](https://kenney.nl/assets/tiny-farm) | CC0 | `tile_0120` — sheep ("Sheep") |
+| assets/symbols/factory.png | [Kenney Tiny Dungeon](https://kenney.nl/assets/tiny-dungeon) | CC0 | `tile_0054` — machine ("Factory") |
+| assets/symbols/depot.png | [Kenney Tiny Farm](https://kenney.nl/assets/tiny-farm) | CC0 | `tile_0074` — crate ("Depot") |
 
 ## Audio (SFX)
 | soundRef | Source URL | License | Notes |

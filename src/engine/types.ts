@@ -54,6 +54,15 @@ export interface SpawnRule {
   note?: string;
 }
 
+/** Delivery line: a hauler moves value from an adjacent producer to an adjacent consumer.
+ * `from`/`to` are a tag or id; the consumer gains `value` × the producers' base value. */
+export interface Delivery {
+  from: string;
+  to: string;
+  value: number;
+  note?: string;
+}
+
 export interface Symbol {
   id: string;
   name: string;
@@ -64,6 +73,7 @@ export interface Symbol {
   destroys: string[];
   transforms: Transform[];
   spawnRules: SpawnRule[];
+  delivery?: Delivery;
   artRef: string;
   soundRef: string;
   devNotes?: string;

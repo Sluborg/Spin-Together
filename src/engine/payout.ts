@@ -161,6 +161,30 @@ export function resolveSpin(
     }
   }
 
+  // Phase 5b — delivery lines: a hauler moves value from adjacent producers to adjacent consumers.
+  // The consumer gains value × the producers' base value (goods are not consumed — co-op generous).
+  for (let i = 0; i < n; i++) {
+    const s = sym(work[i].symbolId);
+    if (!s || !s.delivery) continue;
+    const nb = neighbors(i, cols, rows);
+    const producers = nb.filter((j) => {
+      const t = sym(work[j].symbolId);
+      return t != null && matchesRef(t, s.delivery!.from);
+    });
+    const consumers = nb.filter((j) => {
+      const t = sym(work[j].symbolId);
+      return t != null && matchesRef(t, s.delivery!.to);
+    });
+    if (producers.length === 0 || consumers.length === 0) continue;
+    let delivered = 0;
+    for (const j of producers) {
+      const t = sym(work[j].symbolId);
+      delivered += t ? t.baseValue : 0;
+    }
+    const bonus = delivered * s.delivery.value;
+    for (const c of consumers) work[c].payout += bonus;
+  }
+
   // Phase 6 — synergy multiply (self-buff; applies if ≥1 matching partner present).
   for (let i = 0; i < n; i++) {
     const s = sym(work[i].symbolId);

@@ -47,6 +47,8 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
   // Only "group/category" tags are surfaced to players; functional tags (spawner/scaler/…) are internal.
   const VISIBLE_TAGS = new Set(['animal', 'food', 'mineral', 'plant', 'human', 'tool', 'weapon', 'vehicle', 'potion', 'treasure']);
 
+  const tagLabel = (ref: string): string => (VISIBLE_TAGS.has(ref) ? ref : nameOf(ref));
+
   // Human-readable "what it does" lines, from the authored player-facing notes.
   function effectLines(s: GameSymbol): string[] {
     const lines: string[] = [];
@@ -56,7 +58,18 @@ export function mountApp(root: HTMLElement, config: GameConfig, initialSeed: num
     for (const tr of s.transforms) lines.push(tr.note ?? `Transforms ${nameOf(tr.from)} → ${nameOf(tr.to)}`);
     for (const sp of s.spawnRules) lines.push(sp.note ?? `${Math.round(sp.chance * 100)}% to spawn ${nameOf(sp.spawns)}`);
     for (const d of s.destroys) lines.push(`Destroys ${nameOf(d)}`);
-    return lines;
+    if (s.delivery) {
+      lines.push(s.delivery.note ?? `Delivers an adjacent ${tagLabel(s.delivery.from)} to an adjacent ${tagLabel(s.delivery.to)} for ×${s.delivery.value} value.`);
+    }
+    // self-document consumers/producers of any delivery line this symbol is part of
+    for (const h of config.symbolsById.values()) {
+      if (!h.delivery) continue;
+      const isDest = h.delivery.to === s.id || (VISIBLE_TAGS.has(h.delivery.to) && s.tags.includes(h.delivery.to));
+      const isSrc = h.delivery.from === s.id || (VISIBLE_TAGS.has(h.delivery.from) && s.tags.includes(h.delivery.from));
+      if (isDest) lines.push(`Receives deliveries: a ${h.name} drops adjacent goods here for bonus coins.`);
+      else if (isSrc) lines.push(`Haulable: a ${h.name} can deliver this to an adjacent ${tagLabel(h.delivery.to)}.`);
+    }
+    return [...new Set(lines)];
   }
 
   function openInfo(s: GameSymbol | undefined, anchor?: HTMLElement): void {

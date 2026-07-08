@@ -60,6 +60,8 @@ keep faint corner pixels but read cleanly.
 | cargo-ship | vehicle | Cargo Ship | Tiny Battle | `tile_0177` |
 | crop-duster | vehicle | Crop Duster | Tiny Battle | `tile_0172` |
 | sheep | animal | Sheep | Tiny Farm | `tile_0120` |
+| factory | tool | Factory | Tiny Dungeon | `tile_0054` (machine) |
+| depot | treasure | Depot | Tiny Farm | `tile_0074` (crate) |
 
 **People note:** the only humanoid tiles in these CC0 packs are the Tiny Farm farmer and the Tiny
 Battle soldiers (5 colors), so the human "scalers" (Prospector/Knight/Alchemist/Blacksmith) reuse

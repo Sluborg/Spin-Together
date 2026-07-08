@@ -411,7 +411,13 @@
       "spawnRules": [],
       "artRef": "assets/symbols/delivery-truck.png",
       "soundRef": "",
-      "devNotes": "Hauls loot: +1 per treasure on the board (pairs with chest/coins)."
+      "devNotes": "Hauls loot: +1 per treasure on the board (pairs with chest/coins).",
+      "delivery": {
+        "from": "mineral",
+        "to": "depot",
+        "value": 2,
+        "note": "Delivers an adjacent mineral (Ore/Ingot/gem) to an adjacent Depot for x2 its value."
+      }
     },
     {
       "id": "tractor",
@@ -851,6 +857,44 @@
       "artRef": "assets/symbols/sheep.png",
       "soundRef": "",
       "devNotes": "Flocks: +1 per animal on the board (cheap herd-builder)."
+    },
+    {
+      "id": "factory",
+      "name": "Factory",
+      "rarity": "uncommon",
+      "baseValue": 2,
+      "tags": [
+        "tool"
+      ],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [
+        {
+          "spawns": "iron-ore",
+          "chance": 0.5,
+          "note": "50% each spin to produce an Iron Ore into an empty cell."
+        }
+      ],
+      "artRef": "assets/symbols/factory.png",
+      "soundRef": "",
+      "devNotes": "Producer for the supply line: makes Iron Ore that a Truck can haul to a Depot."
+    },
+    {
+      "id": "depot",
+      "name": "Depot",
+      "rarity": "uncommon",
+      "baseValue": 1,
+      "tags": [
+        "treasure"
+      ],
+      "synergies": [],
+      "destroys": [],
+      "transforms": [],
+      "spawnRules": [],
+      "artRef": "assets/symbols/depot.png",
+      "soundRef": "",
+      "devNotes": "Drop-off point: a Truck delivers adjacent minerals here for bonus coins (place it next to a Truck)."
     }
   ]
 }

@@ -24,6 +24,7 @@ interface Work {
   destroys: unknown[];
   transforms: unknown[];
   spawnRules: unknown[];
+  delivery?: unknown;
   soundRef: string;
   devNotes: string;
 }
@@ -74,6 +75,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
         destroys: s.destroys,
         transforms: s.transforms,
         spawnRules: s.spawnRules,
+        delivery: s.delivery,
         soundRef: s.soundRef,
         devNotes: s.devNotes ?? '',
       });
@@ -466,6 +468,7 @@ export async function mountPicker(root: HTMLElement, config: GameConfig): Promis
       destroys: w.destroys,
       transforms: w.transforms,
       spawnRules: w.spawnRules,
+      ...(w.delivery ? { delivery: w.delivery } : {}),
       artRef: w.art ? `assets/symbols/${w.id}.png` : w.artRef,
       soundRef: w.soundRef,
       devNotes: w.devNotes,

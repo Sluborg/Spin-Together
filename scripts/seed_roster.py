@@ -179,18 +179,37 @@ R = [
     ("sheep", "Sheep", "common", 1, ["animal"],
      [syn("add", 1, tag="animal", note="+1 for each animal on the board.")], [], [], "tiny-farm/tile_0120",
      "Flocks: +1 per animal on the board (cheap herd-builder)."),
+
+    # --- Delivery line: Factory (produces ore) -> Truck (hauls) -> Depot (pays for deliveries) ---
+    ("factory", "Factory", "uncommon", 2, ["tool"], [], [],
+     [{"spawns": "iron-ore", "chance": 0.5, "note": "50% each spin to produce an Iron Ore into an empty cell."}],
+     "tiny-dungeon/tile_0054",
+     "Producer for the supply line: makes Iron Ore that a Truck can haul to a Depot."),
+    ("depot", "Depot", "uncommon", 1, ["treasure"], [], [], [], "tiny-farm/tile_0074",
+     "Drop-off point: a Truck delivers adjacent minerals here for bonus coins (place it next to a Truck)."),
 ]
+
+# Delivery specs (a hauler moves adjacent producer value to an adjacent consumer). Injected below.
+DELIVERY = {
+    "delivery-truck": {
+        "from": "mineral", "to": "depot", "value": 2,
+        "note": "Delivers an adjacent mineral (Ore/Ingot/gem) to an adjacent Depot for x2 its value.",
+    },
+}
 
 
 def main():
     os.makedirs(SPRITES, exist_ok=True)
     symbols = []
     for sid, name, rar, base, tags, syns, trans, spawns, art, notes in R:
-        symbols.append({
+        entry = {
             "id": sid, "name": name, "rarity": rar, "baseValue": base, "tags": tags,
             "synergies": syns, "destroys": [], "transforms": trans, "spawnRules": spawns,
             "artRef": f"assets/symbols/{sid}.png", "soundRef": "", "devNotes": notes,
-        })
+        }
+        if sid in DELIVERY:
+            entry["delivery"] = DELIVERY[sid]
+        symbols.append(entry)
         if art and art.startswith("recolor:"):
             hue = int(art.split(":")[1])
             gem = os.path.join(SPRITES, "gemstone.png")

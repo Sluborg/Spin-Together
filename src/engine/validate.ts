@@ -65,6 +65,11 @@ export function validateSymbols(file: SymbolsFile): string[] {
         errors.push(`${where}: spawnRules.chance must be within [0,1] (got ${sp.chance})`);
       }
     }
+    if (s.delivery) {
+      if (!isTagOrId(s.delivery.from, ids)) errors.push(`${where}: delivery.from "${s.delivery.from}" is not a known tag or id`);
+      if (!isTagOrId(s.delivery.to, ids)) errors.push(`${where}: delivery.to "${s.delivery.to}" is not a known tag or id`);
+      if (typeof s.delivery.value !== 'number') errors.push(`${where}: delivery.value must be a number`);
+    }
   }
   return errors;
 }

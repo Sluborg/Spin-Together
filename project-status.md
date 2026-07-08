@@ -132,6 +132,11 @@ Signature combos (LBAL/Spincraft-style):
   Crop-Duster +per plant.
 - **Hoard:** Treasure-Chest & Cargo-Ship & Delivery-Truck & Sapphire scale with treasure count.
 - **Gamble:** Mushroom ×2 when a second Mushroom is on the board.
+- **Delivery line (NEW engine mechanic):** a **Factory** produces Iron Ore → a **Truck** placed next
+  to both an adjacent mineral and an adjacent **Depot** delivers the good → the Depot pays ×2 its
+  base value. New pure-engine "delivery" phase (`Delivery` type, resolved between add and multiply;
+  adjacency-bridge model), validated + unit-tested; info cards self-document the line (truck shows
+  the delivery, depot shows "receives deliveries", minerals show "haulable").
 Balance is first-pass (values sane, not tuned) — `balance-report` is the next tuning pass.
 Note: no sickle/scythe tile exists in these CC0 packs — Pitchfork fills the farm-tool/weapon slot.
 
